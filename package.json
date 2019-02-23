@@ -1,0 +1,26 @@
+{
+  "name": "spider",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/omkarnath1123/Spider-REST-API.git"
+  },
+  "author": "OMKAR",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/omkarnath1123/Spider-REST-API/issues"
+  },
+  "homepage": "https://github.com/omkarnath1123/Spider-REST-API#readme",
+  "dependencies": {
+    "body-parser": "^1.18.3",
+    "express": "^4.16.4",
+    "mongoose": "^5.4.15",
+    "prettier": "^1.16.4",
+    "puppeteer": "^1.12.2"
+  }
+}
