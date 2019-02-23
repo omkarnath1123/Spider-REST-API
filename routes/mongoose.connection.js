@@ -1,6 +1,8 @@
 const mongoConfig = {
   poolSize: 10,
-  useMongoClient: true,
+  // DeprecationWarning
+  // useMongoClient: true,
+  useNewUrlParser: true,
   connectTimeoutMS: 30000,
   reconnectInterval: 1000,
   family: 4
@@ -9,10 +11,12 @@ const mongoConfig = {
 const mongoose = require("mongoose");
 
 // Build the connection string
-const dbURI = process.env.MONGODB_AUTH || "mongodb://localhost:27017/MobileArena";
+const dbURI =
+  process.env.MONGODB_AUTH || "mongodb://localhost:27017/MobileArena";
 
 // Create the database connection
 mongoose.connect(dbURI, mongoConfig);
+mongoose.set("debug", true);
 
 // make mongoose to return native promise
 mongoose.Promise = global.Promise;

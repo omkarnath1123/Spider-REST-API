@@ -24,12 +24,19 @@ app.listen(port, function() {
 //   res.sendFile((process.env.APP_ROOT_PATH || path.join(__dirname, '/build')) + '/index.html');
 // });
 
-app.listen(Config.port, function() {
-  console.log("Environment Loaded | " + process.env.TEST);
+// Todo: test middleware
+let request_time = (req, res, next) => {
+  req.request_time = new Date();
+  next();
+};
+
+app.listen(function() {
+  console.log("Environment Loaded | " + process.env.TEST || "development");
+  console.log("App current environment  | " + process.env.NODE_ENV || "local");
   console.log(
-    "App current environment  | " + (process.env.NODE_ENV || "local")
-  );
-  console.log(
-    "App Screenshots DIR | " + (process.env.SCREENSHOTS_DIR || "default")
+    "App Screenshots DIR | " + process.env.SCREENSHOTS_DIR || "default"
   );
 });
+
+app.listen(3000);
+app.use(request_time);
