@@ -154,7 +154,7 @@ router.copy("/:method/", (req, res, next) => {
   console.log("request created at : " + (req.request_time || new Date()));
   console.log("Copy Request Body:" + JSON.stringify(req.body));
   (async () => {
-    // only crawl data and return "will done" response
+    // crawl data and write it to db and then return crawler response
     if (!methods.includes(req.params.method)) {
       await res.json({
         success: 0,
@@ -177,6 +177,15 @@ router.copy("/:method/", (req, res, next) => {
       next();
     } catch (error) {
       console.error(error);
+      await res.json({
+        success: 1,
+        data: {
+          message: "Internal SERVER error",
+          error: error,
+          stack: error.stack
+        }
+      });
+      next();
       // FixMe: write error to db
     }
   })();

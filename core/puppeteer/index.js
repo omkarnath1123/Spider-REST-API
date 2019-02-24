@@ -91,7 +91,7 @@ module.exports = class Puppeteer {
     this.browserInstance.on("targetdestroyed", async () =>
       console.log(
         "Target destroyed. Pages count :" +
-          (await this.browserInstance.pages()).length
+          ((await this.browserInstance.pages()) || []).length
       )
     );
     this.webPage = await this.browserInstance.newPage();

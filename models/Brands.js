@@ -3,19 +3,22 @@ const Schema = mongoose.Schema;
 
 // define pending service request schema for data modeling
 var operator_schema = new Schema({
-  company: { type: String },
+  company: { type: String, index: true, default: null },
+  no_of_devices: { type: Number },
+  web_page_link: { type: String },
+  previous_devices_count: { type: Number, default: 0 },
+  all_devices: { type: [Schema.Types.ObjectId], default: [] },
+
+  status: { type: String },
   attempt: { type: Number },
   error: { type: Schema.Types.Mixed, default: [] },
   crawler_error: { type: Schema.Types.Mixed, default: [] },
   crawled_dates: { type: [Date] },
   updated_at: { type: Date, default: Date.now },
-  created_at: { type: Date },
-  devices: { type: Number },
-  previous_devices_count: { type: Number },
-  all_devices: { type: Schema.Types.Mixed }
+  created_at: { type: Date }
 });
 
-let operators = mongoose.model("operators", operator_schema, "operators");
+let Brands = mongoose.model("Brands", operator_schema, "Brands");
 
 // make pending service request model for external use
-module.exports = operators;
+module.exports = Brands;
