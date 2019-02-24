@@ -30,18 +30,61 @@ delete => only delete data to db ( need Admin and developer access )
 let methods = ["Brands", "Device", "Devices"];
 
 router.get("/:method/", (req, res, next) => {
-  console.log("request created at : " + req.request_time || new Date());
+  console.log("request created at : " + (req.request_time || new Date()));
   console.log("Get Request Body:" + JSON.stringify(req.body));
   (async () => {
     // only read data from db
+    if (!methods.includes(req.params.method)) {
+      await res.json({
+        success: 0,
+        message: "unknown URL"
+      });
+      next();
+    } else {
+      req.body.type = req.params.method;
+    }
+    // Send old data as response
+    try {
+      let response = await Master_Operator[mongo_methods[req.params.method]](
+        req.body
+      );
+      await res.send(response);
+      next();
+    } catch (error) {
+      console.error(error);
+      // FixMe: write error to db
+    }
   })();
 });
 
 router.post("/:method/", (req, res, next) => {
-  console.log("request created at : " + req.request_time);
+  console.log("request created at : " + (req.request_time || new Date()));
   console.log("Post Request Body:" + JSON.stringify(req.body));
   (async () => {
     // get current data from db and start crawling for new data
+    if (!methods.includes(req.params.method)) {
+      await res.json({
+        success: 0,
+        message: "unknown URL"
+      });
+      next();
+    } else {
+      req.body.method = req.params.method;
+      req.body.type = req.params.method;
+    }
+    // Send old data as response and Start fetching crawler
+    try {
+      let response = await Master_Operator[mongo_methods[req.params.method]](
+        req.body
+      );
+      await res.send(response);
+      // Later add job to kue
+      await Master_Operator[crawler_methods[req.params.method]](req.body);
+      next();
+    } catch (error) {
+      console.error(error);
+      // FixMe: write error to db
+    }
   })();
 });
 
@@ -55,55 +98,87 @@ router.patch("/:method/", (req, res, next) => {
         success: 0,
         message: "unknown URL"
       });
+      next();
     } else {
       req.body.method = req.params.method;
     }
     // Start fetching crawler
     try {
-      let response = await Master_Operator[crawler_methods[req.params.method]](
-        req.body
-      );
-      await res.send(JSON.parse(response));
+      await res.json({
+        success: 1,
+        message: `db will of ${
+          req.params.method
+        } will be updated within 10 - 30 min.`
+      });
+      // Later add job to kue
+      await Master_Operator[crawler_methods[req.params.method]](req.body);
+      next();
     } catch (error) {
       console.error(error);
-      await res.json({
-        success: 0,
-        message: error,
-        stack_trace: error.stack
-      });
-      next();
+      // FixMe: write error to db
     }
   })();
 });
 
 router.delete("/:method/", (req, res, next) => {
-  console.log("request created at : " + req.request_time);
+  console.log("request created at : " + (req.request_time || new Date()));
   console.log("Delete Request Body:" + JSON.stringify(req.body));
   (async () => {
+    // Todo: create methods , auth and function for deletion
     // only delete data to db ( need Admin and developer access )
     // if (!methods.includes(req.params.method)) {
     //   await res.json({
     //     success: 0,
     //     message: "unknown URL"
     //   });
+    //   next();
     // } else {
-    //   req.body.method = req.params.method;
+    //   req.body.type = req.params.method;
     // }
-    // // Start fetching crawler
+    // // Send old data as response
     // try {
-    //   let response = await Master_Operator[crawler_methods[req.params.method]](
-    //     req.body
-    //   );
-    //   await res.send(JSON.parse(response));
-    // } catch (error) {
-    //   console.error(error);
+    //   await Master_Operator[mongo_methods[req.params.method]](req.body);
     //   await res.json({
-    //     success: 0,
-    //     message: error,
-    //     stack_trace: error.stack
+    //     success: 1,
+    //     message: `query has been deleted from ${req.params.method} collection`
     //   });
     //   next();
+    // } catch (error) {
+    //   console.error(error);
+    //   // FixMe: write error to db
     // }
+  })();
+});
+
+router.copy("/:method/", (req, res, next) => {
+  console.log("request created at : " + (req.request_time || new Date()));
+  console.log("Copy Request Body:" + JSON.stringify(req.body));
+  (async () => {
+    // only crawl data and return "will done" response
+    if (!methods.includes(req.params.method)) {
+      await res.json({
+        success: 0,
+        message: "unknown URL"
+      });
+      next();
+    } else {
+      req.body.method = req.params.method;
+    }
+    // Start fetching data from crawler and then return this as response after write it to db
+    try {
+      // Later add job to kue
+      let response = await Master_Operator[crawler_methods[req.params.method]](
+        req.body
+      );
+      await res.json({
+        success: 1,
+        data: response
+      });
+      next();
+    } catch (error) {
+      console.error(error);
+      // FixMe: write error to db
+    }
   })();
 });
 

@@ -30,7 +30,7 @@ class Master_Operator {
     })();
   }
 
-  // Todo : used to return brand devices data of db
+  // Todo : used to return brand devices data from db
   static getAllBrandsDevices(request) {
     return (async () => {
       // Validate parameters needed for this operation
@@ -48,7 +48,7 @@ class Master_Operator {
     })();
   }
 
-  // Todo: used to crawl and update all brands count data
+  // Todo: used to crawl and update all brands count data ( also return data and write to db )
   static crawlAllBrands(request) {
     return (async () => {
       // Validate parameters needed for this operation
@@ -60,11 +60,11 @@ class Master_Operator {
       }
 
       const Crawler = require(`./child_crawler/${request.method}.js`);
-      return new Crawler(request);
+      return new Crawler(request).header();
     })();
   }
 
-  // Todo: used to crawl and update all brand devices data of db
+  // Todo: used to crawl and update all brand devices data of db ( also return data and write to db )
   static crawlAllBrandsDevices(request) {
     return (async () => {
       // Validate parameters needed for this operation
@@ -98,7 +98,7 @@ class Master_Operator {
     })();
   }
 
-  // Todo : Triggered by post, patch request ( crawl a device data )
+  // Todo : Triggered by post, patch request ( crawl a device data ) ( also return data and write to db )
   static crawlDeviceData(request) {
     return (async () => {
       // Validate parameters needed for this operation
@@ -113,6 +113,8 @@ class Master_Operator {
       return new Crawler(request);
     })();
   }
+
+  // Todo : add Deletion item from collection
 }
 
 module.exports = {
