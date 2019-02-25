@@ -76,7 +76,7 @@ class Master_Operator {
       }
 
       const Crawler = require(`./child_crawler/${request.method}.js`);
-      return new Crawler(request);
+      return new Crawler(request).header();
     })();
   }
 
@@ -110,7 +110,7 @@ class Master_Operator {
       }
 
       const Crawler = require(`./child_crawler/${request.method}.js`);
-      return new Crawler(request);
+      return new Crawler(request).header();
     })();
   }
 

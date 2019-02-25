@@ -2,7 +2,6 @@
 
 // later add every job in queue [mongo_methods, crawler_methods]
 const Puppeteer = require("../../core/puppeteer");
-const mongoose = require("mongoose");
 const Company = require("../../models/Brands");
 
 class Brands {

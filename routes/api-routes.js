@@ -6,6 +6,33 @@ const { crawler_methods, mongo_methods } = require("../methods/utils");
 // release github version after first successful routes
 
 /*
+Routes calls: ( includes crawler_methods and mongo_methods both )
+http://localhost:8080/Brands ( array of Brands )
+warning : never throw web_page_link in REST API ( REST API should not know the consumer where the data come from )
+i.e.
+[ { "company" : "ACER", "no_of_devices" : 100 },
+  { "company" : "ALCATEL", "no_of_devices" : 381 } ]
+
+http://localhost:8080/Brand/Company ( single object ( that object is inside an array ) that return count of Devices and company )
+# no_of_devices
+# company
+warning : never throw web_page_link in REST API ( REST API should not know the consumer where the data come from )
+i.e.
+[ { "company" : "ACER", "no_of_devices" : 100 } ]
+
+http://localhost:8080/Devices ( read the all_devices array from Brands and return array of Devices)
+warning : never throw web_page_link ( in this case device info link ) in REST API ( REST API should not know the consumer where the data come from )
+Todo : crawler and object is to be made
+
+
+http://localhost:8080/Device/Model
+warning : never throw web_page_link ( in this case device info link ) in REST API ( REST API should not know the consumer where the data come from )
+Todo : crawler and object is to be made
+
+*/
+
+
+/*
 Types of router call or Crawler call
 1. get all Mobile phone companies page
 2. get all devices of particular company
