@@ -4,7 +4,8 @@ let express = require("express");
 const path = require("path");
 let app = express();
 
-// for 3 type parallel methods
+// for n type parallel methods
+// print response for every request
 // var kue = require('kue');
 // app.use(kue.app);
 
@@ -25,10 +26,22 @@ app.listen(port, function() {
 // });
 
 // Todo: test middleware
-let request_time = (req, res, next) => {
-  req.request_time = new Date();
+function logResponseBody(req, res, next) {
+  const oldWrite = res.write,
+    oldEnd = res.end;
+  const chunks = [];
+  res.write = function(chunk) {
+    chunks.push(chunk);
+    oldWrite.apply(res, arguments);
+  };
+  res.end = function(chunk) {
+    if (chunk) chunks.push(chunk);
+    const body = Buffer.concat(chunks).toString("utf8");
+    console.log(req.path, body);
+    oldEnd.apply(res, arguments);
+  };
   next();
-};
+}
 
 app.listen(function() {
   console.log("Environment Loaded | " + process.env.TEST || "development");
@@ -38,5 +51,5 @@ app.listen(function() {
   );
 });
 
+app.use(logResponseBody);
 app.listen(3000);
-app.use(request_time);

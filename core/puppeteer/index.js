@@ -88,12 +88,13 @@ module.exports = class Puppeteer {
 
   async openWebPage(url) {
     this.browserInstance = await puppeteer.launch(this.options.params);
-    this.browserInstance.on("targetdestroyed", async () =>
-      console.log(
-        "Target destroyed. Pages count :" +
-          ((await this.browserInstance.pages()) || []).length
-      )
-    );
+    // Todo: see why targetdestroyed is UnhandledPromiseRejectionWarning
+    // this.browserInstance.on("targetdestroyed", async () =>
+    //   console.log(
+    //     "Target destroyed. Pages count :" +
+    //       ((await this.browserInstance.pages()) || []).length
+    //   )
+    // );
     this.webPage = await this.browserInstance.newPage();
     this.bindPageEvents();
     let page = await this.webPage.goto(url, {

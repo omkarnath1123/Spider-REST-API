@@ -19,14 +19,16 @@ class Master_Operator {
       if (!request || typeof request !== "object") {
         throw new Error("Invalid param. Expecting param of type object.");
       }
-      if (!request.type) {
+      if (!request.method) {
         throw new Error(
           "method is mendatory for response and database collection"
         );
+      } else if (request.method === "Brand") {
+        request.method = request.method + "s";
       }
 
       const Mongo = require(`./mongo_methods/${request.method}.js`);
-      return new Mongo(request);
+      return new Mongo(request).header();
     })();
   }
 
@@ -37,14 +39,14 @@ class Master_Operator {
       if (!request || typeof request !== "object") {
         throw new Error("Invalid param. Expecting param of type object.");
       }
-      if (!request.type) {
+      if (!request.method) {
         throw new Error(
           "method is mendatory for response and database collection"
         );
       }
 
       const Mongo = require(`./mongo_methods/${request.method}.js`);
-      return new Mongo(request);
+      return new Mongo(request).header();
     })();
   }
 
@@ -57,6 +59,8 @@ class Master_Operator {
       }
       if (!request.method) {
         throw new Error("method is mendatory for response and crawling");
+      } else if (request.method === "Brand") {
+        request.method = request.method + "s";
       }
 
       const Crawler = require(`./child_crawler/${request.method}.js`);
@@ -87,7 +91,7 @@ class Master_Operator {
       if (!request || typeof request !== "object") {
         throw new Error("Invalid param. Expecting param of type object.");
       }
-      if (!request.type) {
+      if (!request.method) {
         throw new Error(
           "method is mendatory for response and database collection"
         );

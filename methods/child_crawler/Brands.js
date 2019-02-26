@@ -23,9 +23,8 @@ class Brands {
       this.page = await this.browserInstance.openWebPage(this.url);
       let Brands = await this.getTableData();
       // console.log(Brands);
-      await this.updateDB(Brands);
+      Brands = await this.updateDB(Brands);
       await this.browserInstance.close();
-      console.log("here");
       return Brands;
     } catch (error) {
       console.error(error);
@@ -33,6 +32,33 @@ class Brands {
   }
 
   async updateDB(Brands) {
+    if (!Brands.length) return;
+    if (this.context.company) {
+      Brands = Brands.filter(val => val.company === this.context.company);
+      Brands = Brands[0];
+      let company = await Company.find({ company: this.context.company });
+      company = company[0];
+      await Company.findOneAndUpdate(
+        { company: this.context.company },
+        {
+          attempt: (company && company.attempt + 1) || 1,
+          status: "CRAWLED",
+          $push: { crawled_dates: new Date() },
+          updated_at: new Date(),
+          created_at: (company && company.created_at) || new Date(),
+
+          company: Brands.company,
+          no_of_devices: Brands.no_of_devices,
+          web_page_link: Brands.link,
+          previous_devices_count: (company && company.no_of_devices) || 0,
+          // conform all_devices types and model later
+          all_devices: (company && company.all_devices) || []
+        }
+      );
+      let array = [];
+      array.push(Brands);
+      return array;
+    }
     for (let i = 0; i < Brands.length; i++) {
       let company = await Company.find({ company: Brands[i].company });
       await Company.findOneAndUpdate(
@@ -47,14 +73,14 @@ class Brands {
           company: Brands[i].company,
           no_of_devices: Brands[i].no_of_devices,
           web_page_link: Brands[i].link,
-          previous_devices_count:
-            (company[0] && company[0].no_of_devices) || 0,
+          previous_devices_count: (company[0] && company[0].no_of_devices) || 0,
           // conform all_devices types and model later
           all_devices: (company[0] && company[0].all_devices) || []
         },
         { upsert: true }
       );
     }
+    return Brands;
   }
 
   async getProxyAndPort() {
