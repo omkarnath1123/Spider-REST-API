@@ -1,6 +1,5 @@
 "use strict";
 
-// later add every job in queue [mongo_methods, crawler_methods]
 const Puppeteer = require("../../core/puppeteer");
 const Company = require("../../models/Brands");
 
@@ -13,16 +12,16 @@ class Brands {
     this.page = null;
   }
 
-  // Later master function called from queue (kue)
   async header() {
     try {
+      // Todo : update code syntax {take reference from Devices}
       // implement select proxy later
       // let proxies = await this.getProxyAndPort();
 
       // try to aggregate and update in db as processing
       this.page = await this.browserInstance.openWebPage(this.url);
       let Brands = await this.getTableData();
-      // console.log(Brands);
+      console.log(JSON.stringify(Brands));
       Brands = await this.updateDB(Brands);
       await this.browserInstance.close();
       return Brands;
@@ -51,7 +50,6 @@ class Brands {
           no_of_devices: Brands.no_of_devices,
           web_page_link: Brands.link,
           previous_devices_count: (company && company.no_of_devices) || 0,
-          // conform all_devices types and model later
           all_devices: (company && company.all_devices) || []
         }
       );
@@ -74,8 +72,8 @@ class Brands {
           no_of_devices: Brands[i].no_of_devices,
           web_page_link: Brands[i].link,
           previous_devices_count: (company[0] && company[0].no_of_devices) || 0,
-          // conform all_devices types and model later
-          all_devices: (company[0] && company[0].all_devices) || []
+          all_devices: (company[0] && company[0].all_devices) || [],
+          devices_list_count: company[0].devices_list_count || 0
         },
         { upsert: true }
       );

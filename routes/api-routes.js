@@ -4,7 +4,7 @@ const { crawler_methods, mongo_methods } = require("../methods/utils");
 
 // add Authentication Later after first release
 // release github version after first successful routes
-
+// add nodemon -g to restart server automatically
 /*
 Routes calls: ( includes crawler_methods and mongo_methods both )
 http://localhost:8080/Brands ( array of Brands )
@@ -31,6 +31,7 @@ Todo : crawler and object is to be made
 
 */
 
+// add when error is present write error in file with error.stack { for server case } current req.params and req.body { if possible } and current date
 /*
 Types of router call or Crawler call
 1. get all Mobile phone companies page
@@ -54,10 +55,10 @@ delete => only delete data to db ( need Admin and developer access )
 */
 
 let methods = ["Brand", "Brands", "Device", "Devices"];
-// Brands : return []
-// Brand::company : return []
-// Devices: return []
-// Device::model : return []
+// Brands : return [] DONE
+// Brand::company : return [] DONE
+// Devices: return [] { "company" : "XYZ" }
+// Device::model : return [] { "company" : "XYZ" }
 
 function showRequestParams(req, res, next) {
   console.log("Request created at : " + new Date());
@@ -69,8 +70,10 @@ function showRequestParams(req, res, next) {
   req.body.model = req.params.model; // Device::model : return []
   if (
     (req.params.method === "Brand" && !req.params.company) ||
+    (req.params.method === "Device" && !req.params.company) ||
     (req.params.method === "Device" && !req.params.model) ||
     (req.params.method === "Brands" && req.params.company) ||
+    (req.params.method === "Devices" && !req.params.company) ||
     (req.params.method === "Devices" && req.params.model)
   ) {
     res.json({
@@ -140,11 +143,45 @@ async function crawlBrands(req, res, next) {
   next();
 }
 
-router.get("/:method/", [showRequestParams, readBrands]);
-router.post("/:method/", [showRequestParams, readBrands, crawlBrands]);
+// BRAND DATA METHODS
+router.get(
+  [
+    "/:method/",
+    "/:method/:company/",
+    "/:method/:model/",
+    "/:method/:company/:model/"
+  ],
+  [showRequestParams, readBrands]
+);
+// here post req body is empty can be implemented as get req
+// post method is only accessible to developer and admin
+router.post(
+  [
+    "/:method/",
+    "/:method/:company/",
+    "/:method/:model/",
+    "/:method/:company/:model/"
+  ],
+  [showRequestParams, readBrands, crawlBrands]
+);
 
-router.get("/:method/:company", [showRequestParams, readBrands]);
-router.post("/:method/:company", [showRequestParams, readBrands, crawlBrands]);
+// DEVICES DATA METHODS
+// can be accessable for all users { only get from DB }
+router.post("/:method/", [showRequestParams, /*readBrands,*/ crawlBrands]);
+// this method is only accessible to developer and admin
+router.post("/:method/", [showRequestParams]);
+
+// Todo: implement others
+// these methods are idempotent { and res should be implemented in that way }
+router.patch("/:method/", [showRequestParams]);
+router.delete("/:method/", [showRequestParams]);
+// search for implementation
+router.copy("/:method/", [showRequestParams]);
+
+router.use(function(req, res, next) {
+  if (!req.route) return next(new Error("404"));
+  next();
+});
 
 // router.post("/:method/:remove", (req, res, next) => {
 //   console.log("request created at : " + (req.request_time || new Date()));

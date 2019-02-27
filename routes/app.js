@@ -9,6 +9,7 @@ let app = express();
 // var kue = require('kue');
 // app.use(kue.app);
 
+app.use(logResponseBody);
 app.use(require("body-parser").json({ limit: "5mb" }));
 app.use(require("body-parser").urlencoded({ extended: false }));
 app.use("/", require("./api-routes"));
@@ -25,7 +26,6 @@ app.listen(port, function() {
 //   res.sendFile((process.env.APP_ROOT_PATH || path.join(__dirname, '/build')) + '/index.html');
 // });
 
-// Todo: test middleware
 function logResponseBody(req, res, next) {
   const oldWrite = res.write,
     oldEnd = res.end;
@@ -37,7 +37,11 @@ function logResponseBody(req, res, next) {
   res.end = function(chunk) {
     if (chunk) chunks.push(chunk);
     const body = Buffer.concat(chunks).toString("utf8");
-    console.log(req.path, body);
+    console.log(
+      `http://localhost:${port}${req.path} : `,
+      "Response Body : " + body
+    );
+    // add all this log to file
     oldEnd.apply(res, arguments);
   };
   next();
@@ -50,6 +54,3 @@ app.listen(function() {
     "App Screenshots DIR | " + process.env.SCREENSHOTS_DIR || "default"
   );
 });
-
-app.use(logResponseBody);
-app.listen(3000);

@@ -21,7 +21,7 @@ class Master_Operator {
       }
       if (!request.method) {
         throw new Error(
-          "method is mendatory for response and database collection"
+          "method is mandatory for response and database collection"
         );
       } else if (request.method === "Brand") {
         request.method = request.method + "s";
@@ -39,9 +39,9 @@ class Master_Operator {
       if (!request || typeof request !== "object") {
         throw new Error("Invalid param. Expecting param of type object.");
       }
-      if (!request.method) {
+      if (!request.method || !request.company) {
         throw new Error(
-          "method is mendatory for response and database collection"
+          "method and company is mandatory for response and database collection"
         );
       }
 
@@ -58,7 +58,7 @@ class Master_Operator {
         throw new Error("Invalid param. Expecting param of type object.");
       }
       if (!request.method) {
-        throw new Error("method is mendatory for response and crawling");
+        throw new Error("method is mandatory for response and crawling");
       } else if (request.method === "Brand") {
         request.method = request.method + "s";
       }
@@ -75,8 +75,10 @@ class Master_Operator {
       if (!request || typeof request !== "object") {
         throw new Error("Invalid param. Expecting param of type object.");
       }
-      if (!request.method) {
-        throw new Error("method is mendatory for response and crawling");
+      if (!request.method || !request.company) {
+        throw new Error(
+          "method and company is mandatory for response and crawling"
+        );
       }
 
       const Crawler = require(`./child_crawler/${request.method}.js`);
@@ -93,7 +95,7 @@ class Master_Operator {
       }
       if (!request.method) {
         throw new Error(
-          "method is mendatory for response and database collection"
+          "method is mandatory for response and database collection"
         );
       }
 
@@ -110,7 +112,7 @@ class Master_Operator {
         throw new Error("Invalid param. Expecting param of type object.");
       }
       if (!request.method) {
-        throw new Error("method is mendatory for response and crawling");
+        throw new Error("method is mandatory for response and crawling");
       }
 
       const Crawler = require(`./child_crawler/${request.method}.js`);

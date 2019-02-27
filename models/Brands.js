@@ -8,6 +8,7 @@ var operator_schema = new Schema({
   web_page_link: { type: String },
   previous_devices_count: { type: Number, default: 0 },
   all_devices: { type: [Schema.Types.ObjectId], default: [] },
+  devices_list_count: { type: Number, default: 0 },
 
   status: { type: String },
   attempt: { type: Number },

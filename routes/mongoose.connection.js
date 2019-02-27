@@ -3,6 +3,7 @@ const mongoConfig = {
   // DeprecationWarning
   // useMongoClient: true,
   useNewUrlParser: true,
+  useCreateIndex: true,
   connectTimeoutMS: 30000,
   reconnectInterval: 1000,
   family: 4
