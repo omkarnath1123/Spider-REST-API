@@ -6,8 +6,8 @@ const Company = require("../../models/Brands");
 class Brands {
   constructor(context) {
     this.context = context;
-    this.url = "https://www.gsmarena.com/makers.php3";
-    this.free_proxy_url = "https://www.socks-proxy.net/";
+    this.url = `${process.env.PAGE_BASE_URL}makers.php3`;
+    this.free_proxy_url = process.env.PROXY_URL;
     this.browserInstance = new Puppeteer();
     this.page = null;
   }
@@ -17,13 +17,13 @@ class Brands {
       // Todo : update code syntax {take reference from Devices}
       // implement select proxy later
       // let proxies = await this.getProxyAndPort();
+      // try to aggregate and update in db as processing ? is necessary : to check for which company res has failed
 
-      // try to aggregate and update in db as processing
       this.page = await this.browserInstance.openWebPage(this.url);
       let Brands = await this.getTableData();
+      await this.browserInstance.close();
       console.log(JSON.stringify(Brands));
       Brands = await this.updateDB(Brands);
-      await this.browserInstance.close();
       return Brands;
     } catch (error) {
       console.error(error);
@@ -73,7 +73,7 @@ class Brands {
           web_page_link: Brands[i].link,
           previous_devices_count: (company[0] && company[0].no_of_devices) || 0,
           all_devices: (company[0] && company[0].all_devices) || [],
-          devices_list_count: company[0].devices_list_count || 0
+          devices_list_count: (company[0] && company[0].devices_list_count) || 0
         },
         { upsert: true }
       );
@@ -91,7 +91,7 @@ class Brands {
 
   async getTableData() {
     let td = await this.page.$$("td");
-    let parentLink = "https://www.gsmarena.com/";
+    let parentLink = process.env.PAGE_BASE_URL;
     let Brands = [];
     for (let i = 0; i < td.length; i++) {
       let link = await this.page.evaluate(td => {
@@ -116,9 +116,6 @@ class Brands {
     }
     return Brands;
   }
-
-  // create or update collection
-  async createOrUpdateCollection() {}
 }
 
 module.exports = Brands;

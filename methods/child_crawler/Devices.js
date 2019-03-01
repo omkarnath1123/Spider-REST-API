@@ -4,11 +4,11 @@ const Puppeteer = require("../../core/puppeteer");
 const Company = require("../../models/Brands");
 const Devices = require("../../models/Devices");
 
-class Brands {
+class BrandsDevices {
   constructor(context) {
     this.context = context;
     this.url = null;
-    this.free_proxy_url = "https://www.socks-proxy.net/";
+    this.free_proxy_url = process.env.PROXY_URL;
     this.browserInstance = new Puppeteer();
     this.page = null;
   }
@@ -43,7 +43,7 @@ class Brands {
     let all_devices = [];
     let pages_links = await this.page.$$eval(".nav-pages > a", nodes =>
       nodes.map(node => {
-        return "https://www.gsmarena.com/" + node.getAttribute("href");
+        return `${process.env.PAGE_BASE_URL}` + node.getAttribute("href");
       })
     );
     await this.get_data(all_devices, pages_links, 0);
@@ -138,4 +138,4 @@ class Brands {
   }
 }
 
-module.exports = Brands;
+module.exports = BrandsDevices;

@@ -82,7 +82,7 @@ function showRequestParams(req, res, next) {
     });
     return;
   }
-  next();
+  return next();
 }
 async function readBrands(req, res, next) {
   if (!methods.includes(req.params.method)) {
@@ -111,7 +111,7 @@ async function readBrands(req, res, next) {
     });
     return;
   }
-  next();
+  return next();
 }
 async function crawlBrands(req, res, next) {
   if (!methods.includes(req.params.method)) {
@@ -125,6 +125,8 @@ async function crawlBrands(req, res, next) {
     let response = await Master_Operator[crawler_methods[req.params.method]](
       req.body
     );
+    // FixMe: fix return statement for put req
+    // return next();
     await res.json({
       success: true,
       response: response
@@ -138,9 +140,8 @@ async function crawlBrands(req, res, next) {
       message: "Server Crashed contact your network administrator",
       stack: error.stack
     });
-    return;
   }
-  next();
+  return next();
 }
 
 // BRAND DATA METHODS

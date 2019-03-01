@@ -1,4 +1,6 @@
 "use strict";
+
+const fs = require("fs");
 require("./mongoose.connection");
 let express = require("express");
 const path = require("path");
@@ -25,6 +27,34 @@ app.listen(port, function() {
 // app.get('*', (req, res)=> {
 //   res.sendFile((process.env.APP_ROOT_PATH || path.join(__dirname, '/build')) + '/index.html');
 // });
+
+(function() {
+  let _log = console.log;
+  let _error = console.error;
+  let _warning = console.warning;
+
+  console.error = function(errMessage) {
+    fs.appendFileSync(
+      `${process.env.LOG_PATH}Spider-REST-API/logs/error.txt`,
+      new Date() + " : " + errMessage + "\n"
+    );
+    _error.apply(console, arguments);
+  };
+  console.log = function(logMessage) {
+    fs.appendFileSync(
+      `${process.env.LOG_PATH}Spider-REST-API/logs/log.txt`,
+      new Date() + " : " + logMessage + "\n"
+    );
+    _log.apply(console, arguments);
+  };
+  console.warning = function(warnMessage) {
+    fs.appendFileSync(
+      `${process.env.LOG_PATH}Spider-REST-API/logs/warning.txt`,
+      new Date() + " : " + warnMessage + "\n"
+    );
+    _warning.apply(console, arguments);
+  };
+})();
 
 function logResponseBody(req, res, next) {
   const oldWrite = res.write,

@@ -13,7 +13,7 @@ module.exports = class Puppeteer {
         // userDataDir: process.env.PUPPETEER_DIR || __tempDir,
         // slowMo: 100,
         ignoreHTTPSErrors: true,
-        headless: env === "production" || env === "staging",
+        headless: env === "production" || env === "staging" || true,
         devtools:
           env !== "production" && env !== "staging" && env !== "development",
         args: [
