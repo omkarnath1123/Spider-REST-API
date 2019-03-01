@@ -1,6 +1,5 @@
 "use strict";
 
-const Company = require("../../models/Brands");
 const Devices = require("../../models/Devices");
 
 class DevicesClass {
@@ -11,7 +10,6 @@ class DevicesClass {
   async header() {
     try {
       // try to aggregate and update in db as processing ? is necessary : maybe
-
       let data = await Devices.find(
         { company: this.context.company },
         {
@@ -28,8 +26,6 @@ class DevicesClass {
       console.error(error);
     }
   }
-
-  async updateDB(Brands) {}
 }
 
 module.exports = DevicesClass;

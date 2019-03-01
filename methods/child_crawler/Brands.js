@@ -21,11 +21,13 @@ class Brands {
 
       this.page = await this.browserInstance.openWebPage(this.url);
       let Brands = await this.getTableData();
+      this.page = null;
       await this.browserInstance.close();
       console.log(JSON.stringify(Brands));
       Brands = await this.updateDB(Brands);
       return Brands;
     } catch (error) {
+      if (this.page) await this.browserInstance.close();
       console.error(error);
     }
   }
@@ -86,7 +88,6 @@ class Brands {
     await this.page.evaluate(() => {
       document.querySelector('select[name="proxylisttable_length"]').value = 80;
     });
-    await this.page.$$("");
   }
 
   async getTableData() {

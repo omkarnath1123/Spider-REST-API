@@ -28,6 +28,7 @@ class BrandsDevices {
       );
       let Devices = await this.getJSON();
       console.log(JSON.stringify(Devices));
+      this.page = null;
       await this.browserInstance.close();
       await this.updateDB(Devices);
       Devices.forEach(value => {
@@ -36,14 +37,17 @@ class BrandsDevices {
       return Devices;
     } catch (error) {
       console.error(error);
+      if (this.page) await this.browserInstance.close();
     }
   }
 
   async getJSON() {
     let all_devices = [];
+    await this.page.waitForSelector(".nav-pages > a");
+    // Todo: check why process.env.PAGE_BASE_URL ? undefined
     let pages_links = await this.page.$$eval(".nav-pages > a", nodes =>
       nodes.map(node => {
-        return `${process.env.PAGE_BASE_URL}` + node.getAttribute("href");
+        return "https://www.gsmarena.com/" + node.getAttribute("href");
       })
     );
     await this.get_data(all_devices, pages_links, 0);
@@ -65,12 +69,11 @@ class BrandsDevices {
     }
     let is_last_page = await this.page.$(".pages-next.disabled");
     let next_page = await this.page.$(".pages-next");
-    // $$ false to disable pagination
+    // && false to disable pagination
     if (!is_last_page && next_page) {
-      // await this.page.click(".pages-next");
-      // await this.page.waitForSelector(".pages-next", { timeout: 60000 });
-      // await this.page.waitFor(5000);
-      await this.page.goto(pages_links[i]);
+      try {
+        await this.page.goto(pages_links[i]);
+      } catch (e) {}
       i++;
       await this.get_data(all_devices, pages_links, i);
     }

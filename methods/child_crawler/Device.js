@@ -1,7 +1,6 @@
 "use strict";
 
 const Puppeteer = require("../../core/puppeteer");
-const Company = require("../../models/Brands");
 const Devices = require("../../models/Devices");
 
 class BrandsDeviceData {
@@ -28,10 +27,12 @@ class BrandsDeviceData {
       );
       let Devices = await this.getJSON();
       console.log(JSON.stringify(Devices));
+      this.page = null;
       await this.browserInstance.close();
       Devices = await this.updateDB(Devices);
       return Devices;
     } catch (error) {
+      if (this.page) await this.browserInstance.close();
       console.error(error);
     }
   }
@@ -49,13 +50,24 @@ class BrandsDeviceData {
           heading = await tr[j].$eval("th", node => node.innerText);
           heading = heading ? heading.trim().toLowerCase() : heading;
         }
-        let type = await tr[j].$eval("td.ttl", node => node.innerText);
+        let type = "";
+        let check = await tr[j].$("td.ttl");
+        if (check) {
+          type = await tr[j].$eval("td.ttl", node => node.innerText);
+        }
+        let data = "";
+        check = await tr[j].$("td.nfo");
+        if (check) {
+          data = await tr[j].$eval("td.nfo", node => node.innerText);
+        }
+        if (data === "" && type === "") {
+          continue;
+        }
         type = type.trim();
         if (!type) {
           type = `${heading}_spec_${temp_keys}`;
           temp_keys++;
         }
-        let data = await tr[j].$eval("td.nfo", node => node.innerText);
         data = data ? data.trim() : data;
         obj[type] = data;
       }
@@ -77,22 +89,34 @@ class BrandsDeviceData {
     if (info[3])
       device_info.storage = await info[3].$eval("span", node => node.innerText);
 
-    let url = await this.page.$eval(
-      ".article-info-meta-link.light > a",
-      node => node.href
+    let urls = await this.page.$$eval("ul.article-info-meta > li > a", nodes =>
+      nodes.map(node => {
+        return "https://www.gsmarena.com/" + node.getAttribute("href");
+      })
     );
-    let images = [];
-    if (url) {
-      await this.page.goto(url);
-      let links = await this.page.$("#pictures-list");
-      images = await links.$$eval("#pictures-list > img", nodes =>
-        nodes.map(node => {
-          return node.getAttribute("src");
-        })
-      );
-    }
+    let images = await this.images(urls);
+    images = images || [];
     device_info.device_images = images;
     return device_info;
+  }
+
+  async images(urls) {
+    for (let i = 0; i < urls.length; i++) {
+      if (urls[i]) {
+        try {
+          await this.page.goto(urls[i]);
+          // await this.page.waitForSelector("#pictures-list"); ? is mandatory
+        } catch (e) {}
+        let is_images = await this.page.$("#pictures-list");
+        if (is_images) {
+          return await is_images.$$eval("#pictures-list > img", nodes =>
+            nodes.map(node => {
+              return node.getAttribute("src") || node.getAttribute("data-src");
+            })
+          );
+        }
+      }
+    }
   }
 
   async getURL() {

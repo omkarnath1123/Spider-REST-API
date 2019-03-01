@@ -93,14 +93,14 @@ class Master_Operator {
       if (!request || typeof request !== "object") {
         throw new Error("Invalid param. Expecting param of type object.");
       }
-      if (!request.method) {
+      if (!request.method || !request.company || !request.model) {
         throw new Error(
-          "method is mandatory for response and database collection"
+          "method, company and model is mandatory for response and database collection"
         );
       }
 
       const Mongo = require(`./mongo_methods/${request.method}.js`);
-      return new Mongo(request);
+      return new Mongo(request).header();
     })();
   }
 
@@ -111,8 +111,10 @@ class Master_Operator {
       if (!request || typeof request !== "object") {
         throw new Error("Invalid param. Expecting param of type object.");
       }
-      if (!request.method) {
-        throw new Error("method is mandatory for response and crawling");
+      if (!request.method || !request.company || !request.model) {
+        throw new Error(
+          "method, company and model is mandatory for response and crawling"
+        );
       }
 
       const Crawler = require(`./child_crawler/${request.method}.js`);

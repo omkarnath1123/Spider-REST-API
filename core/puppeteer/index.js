@@ -13,7 +13,7 @@ module.exports = class Puppeteer {
         // userDataDir: process.env.PUPPETEER_DIR || __tempDir,
         // slowMo: 100,
         ignoreHTTPSErrors: true,
-        headless: env === "production" || env === "staging" || true,
+        headless: env === "production" || env === "staging",
         devtools:
           env !== "production" && env !== "staging" && env !== "development",
         args: [
@@ -105,46 +105,6 @@ module.exports = class Puppeteer {
       throw new Error("could not open web page -> " + url);
     }
     return this.webPage;
-  }
-
-  setScreenShotSubDir(path, absPath, isPathOptional) {
-    return new Promise((resolve, reject) => {
-      path = (path || "").trim().replace(/\//g, "");
-      if (path) {
-        path += `_v${this.options.tryAttempt}`;
-      }
-      if (!isPathOptional && !path) resolve();
-      absPath = absPath || __tempDir;
-      this.screenShotDir = absPath + path + "/";
-      fs.stat(this.screenShotDir, err => {
-        if (err) {
-          fs.mkdir(this.screenShotDir, err => {
-            if (!err) {
-              resolve(true);
-            }
-            reject("Screenshot directory not created try again!!");
-          });
-        } else {
-          resolve(true);
-        }
-      });
-    });
-  }
-
-  captureScreenshot(name) {
-    if (process.env.KONNECT_MONGODB_AUTH === "production") {
-      return null;
-    } else {
-      name = name.trim();
-      if (name.match(/\.jpg$/) == null) name = name + ".jpg";
-      let path = this.screenShotDir + name;
-      return this.webPage.screenshot({
-        path: path,
-        type: "jpeg",
-        quality: 75,
-        fullPage: true
-      });
-    }
   }
 
   async close() {
