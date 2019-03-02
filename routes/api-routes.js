@@ -126,11 +126,11 @@ async function crawlBrands(req, res, next) {
       req.body
     );
     // FixMe: fix return statement for put req
-    // return next();
-    await res.json({
-      success: true,
-      response: response
-    });
+    return next();
+    // await res.json({
+    //   success: true,
+    //   response: response
+    // });
   } catch (error) {
     console.error(error);
     // Todo: write error to SERVER_ERRORS file in root dir

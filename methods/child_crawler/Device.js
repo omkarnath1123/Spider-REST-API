@@ -156,7 +156,7 @@ class BrandsDeviceData {
         updated_at: new Date(),
         created_at: (previous_data && previous_data.created_at) || new Date()
       },
-      { upsert: false }
+      { upsert: true }
     );
     devices.company = previous_data.company;
     devices.product_image = previous_data.product_image;
