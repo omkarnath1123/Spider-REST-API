@@ -12,7 +12,7 @@ getAllBrands, getAllBrandsDevices, getDeviceData
 */
 
 class Master_Operator {
-  // Todo : used to return all brands count data
+  // Todo : used to return all brands and single brand count data
   static getAllBrands(request) {
     return (async () => {
       // Validate parameters needed for this operation
@@ -50,7 +50,7 @@ class Master_Operator {
     })();
   }
 
-  // Todo: used to crawl and update all brands count data ( also return data and write to db )
+  // Todo: used to crawl and update all brands and single brand count data ( also return data and write to db )
   static crawlAllBrands(request) {
     return (async () => {
       // Validate parameters needed for this operation

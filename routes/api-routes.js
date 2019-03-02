@@ -62,9 +62,9 @@ let methods = ["Brand", "Brands", "Device", "Devices"];
 
 function showRequestParams(req, res, next) {
   console.log("Request created at : " + new Date());
-  console.log("Request URL :", req.originalUrl);
-  console.log("Request params :", req.params);
-  console.log("Request Body :", JSON.stringify(req.body));
+  console.log("Request URL :" + req.originalUrl);
+  console.log("Request params :" + JSON.stringify(req.params));
+  console.log("Request Body :" + JSON.stringify(req.body));
   req.body.method = req.params.method; // method => Brands : return [] // method => Devices: return []
   req.body.company = req.params.company; // company => Brand::company : return []
   req.body.model = req.params.model; // Device::model : return []
