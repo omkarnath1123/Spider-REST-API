@@ -36,6 +36,7 @@ app.listen(port, function() {
   let _error = console.error;
   let _warning = console.warning;
 
+  // Todo: create .log automatically and use path library
   console.error = function(errMessage) {
     if (process.env.NODE_ENV === "production") {
       if (!fs.existsSync(`${process.env.LOG_PATH}/error.txt`)) {

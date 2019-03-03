@@ -3,26 +3,29 @@
   // Hover to view descriptions of existing attributes.
   // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
   "version": "0.2.0",
-  "configurations": [{
-    "type": "node",
-    "request": "launch",
-    "name": "Launch Program",
-    "program": "${workspaceFolder}/routes/app.js",
-    "env": {
-      "NODE_ENV": "development",
-      // "NODE_ENV": "staging",
-      // "NODE_ENV": "production",
-      "LOG_PATH": "${workspaceFolder}",
-      "PROXY_URL": "https://www.socks-proxy.net/",
-      "PORT": "5000",
-      "PAGE_BASE_URL": "https://www.gsmarena.com/",
-      "MONGODB_AUTH": "",
-    },
-    "console": "internalConsole",
-    "internalConsoleOptions": "openOnSessionStart",
-    "cwd": "${workspaceFolder}",
-    "showAsyncStacks": true,
-    "timeout": 10000,
-    "trace": true
-  }]
+  "configurations": [
+    {
+      "type": "node",
+      "request": "launch",
+      "name": "Launch Program",
+      "program": "${workspaceFolder}/routes/app.js",
+      "env": {
+        "NODE_ENV": "development",
+        // "NODE_ENV": "staging",
+        // "NODE_ENV": "production",
+        "LOG_PATH": "${workspaceFolder}",
+        "PROXY_URL": "https://www.socks-proxy.net/",
+        "PORT": "5000",
+        "PAGE_BASE_URL": "https://www.gsmarena.com/",
+        // use admin to call delete request
+        "MONGODB_AUTH": "mongodb+srv://developer:developerAtMongo@cluster0-l9wqt.mongodb.net/MobileArena?retryWrites=true"
+      },
+      "console": "internalConsole",
+      "internalConsoleOptions": "openOnSessionStart",
+      "cwd": "${workspaceFolder}",
+      "showAsyncStacks": true,
+      "timeout": 10000,
+      "trace": true
+    }
+  ]
 }
