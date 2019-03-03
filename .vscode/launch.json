@@ -18,7 +18,7 @@
         "PORT": "5000",
         "PAGE_BASE_URL": "https://www.gsmarena.com/",
         // use admin to call delete request
-        "MONGODB_AUTH": "mongodb+srv://developer:developerAtMongo@cluster0-l9wqt.mongodb.net/MobileArena?retryWrites=true"
+        // "MONGODB_AUTH": "mongodb+srv://developer:developerAtMongo@cluster0-l9wqt.mongodb.net/MobileArena?retryWrites=true"
       },
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",

@@ -30,7 +30,7 @@ var operator_schema = new Schema({
   device_images: { type: Schema.Types.Mixed, default: [] }
 });
 
-let Brands = mongoose.model("Devices", operator_schema, "Devices");
+let Devices = mongoose.model("Devices", operator_schema, "Devices");
 
 // make pending service request model for external use
-module.exports = Brands;
+module.exports = Devices;
