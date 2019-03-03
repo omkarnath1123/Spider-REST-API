@@ -1,0 +1,21 @@
+{
+  "name": "SPIDER REST API",
+  "description": "a rest API for all the gadgets in the world.",
+  "repository": "https://github.com/omkarnath1123/Spider-REST-API",
+  "logo": "https://www.smileysapp.com/emojis/spider.png",
+  "keywords": ["node", "express", "API"],
+  "image": "heroku/nodejs",
+  "env": {
+    "NODE_ENV": "production",
+    "PROXY_URL": "https://www.socks-proxy.net/",
+    "PORT": "5000",
+    "PAGE_BASE_URL": "https://www.gsmarena.com/",
+    "MONGODB_AUTH": "mongodb+srv://developer:developerAtMongo@cluster0-l9wqt.mongodb.net/test?retryWrites=true"
+  },
+  "addons": [
+    {
+      "plan": "mongolab:shared-single-small",
+      "as": "MONGO"
+    }
+  ]
+}
