@@ -3,13 +3,15 @@
 const fs = require("fs");
 require("./mongoose.connection");
 let express = require("express");
-const path = require("path");
+// const path = require("path");
+// const morgan = require("morgan");
+const responseTime = require('response-time')
 let app = express();
 
 app.use(logResponseBody);
 app.use(
   require("body-parser").json({
-    limit: "10mb"
+    limit: "5mb"
   })
 );
 app.use(
@@ -17,6 +19,8 @@ app.use(
     extended: false
   })
 );
+// NOTE used to see respose time in browsers
+app.use(responseTime());
 app.use("/", require("./api-routes"));
 process.on("uncaughtException", function(err) {
   console.log(err);
@@ -26,7 +30,7 @@ app.listen(port, function() {
   console.log("Running SPIDER Rest Hub on port " + port);
 });
 
-// for react app
+// NOTE for react app
 // app.get('*', (req, res)=> {
 //   res.sendFile((process.env.APP_ROOT_PATH || path.join(__dirname, '/build')) + '/index.html');
 // });
@@ -36,7 +40,7 @@ app.listen(port, function() {
   let _error = console.error;
   let _warning = console.warning;
 
-  // Todo: create .log automatically and use path library
+  // TODO  create .error automatically and use path library
   console.error = function(errMessage) {
     if (process.env.NODE_ENV === "production") {
       if (!fs.existsSync(`${process.env.LOG_PATH}/error.txt`)) {
@@ -55,6 +59,8 @@ app.listen(port, function() {
     }
     _error.apply(console, arguments);
   };
+
+  // TODO  create .log automatically and use path library
   console.log = function(logMessage) {
     if (process.env.NODE_ENV !== "production") {
       if (!fs.existsSync(`${process.env.LOG_PATH}/log.txt`)) {
@@ -63,7 +69,7 @@ app.listen(port, function() {
       const stats = fs.statSync(`${process.env.LOG_PATH}/log.txt`);
       const fileSizeInBytes = stats.size;
       const fileSizeInMegabytes = fileSizeInBytes / 1000000.0;
-      // delete file if it exeeds 25mb
+      // NOTE delete file if it exeeds 25mb
       if (fileSizeInMegabytes > 25) {
         fs.unlink(`${process.env.LOG_PATH}/log.txt`, err => {
           if (err) throw err;
@@ -77,6 +83,8 @@ app.listen(port, function() {
     }
     _log.apply(console, arguments);
   };
+
+  // TODO  create .warning automatically and use path library
   console.warning = function(warnMessage) {
     if (process.env.NODE_ENV === "production") {
       if (!fs.existsSync(`${process.env.LOG_PATH}/warning.txt`)) {
@@ -105,12 +113,12 @@ function logResponseBody(req, res, next) {
     chunks.push(chunk);
     oldWrite.apply(res, arguments);
   };
+  // FIXME fix response for favicon.ico
   res.end = function(chunk) {
     if (chunk) chunks.push(chunk);
     const body = Buffer.concat(chunks).toString("utf8");
     console.log(
-      `http://localhost:${port}${req.path} : ` +
-      "Response Body : " + body
+      `http://localhost:${port}${req.path} : ` + "Response Body : " + body
     );
     oldEnd.apply(res, arguments);
   };

@@ -9,6 +9,7 @@ class DevicesData {
 
   async header() {
     try {
+      // SECTION also update in crawler_methods
       let data;
       data = await Devices.findOne(
         { company: this.context.company, product_name: this.context.model },
@@ -26,7 +27,7 @@ class DevicesData {
           review: 1
         }
       );
-      console.log(JSON.stringify(data));
+      // console.log(JSON.stringify(data));
       return data;
     } catch (error) {
       console.error(error);

@@ -9,7 +9,8 @@ class DevicesClass {
 
   async header() {
     try {
-      // try to aggregate and update in db as processing ? is necessary : maybe
+      // SECTION also update in crawler_methods
+      // REVIEW try to aggregate and update in db as processing ? is necessary : maybe
       let data = await Devices.find(
         { company: this.context.company },
         {
@@ -20,7 +21,7 @@ class DevicesClass {
           desc: 1
         }
       );
-      console.log(JSON.stringify(data));
+      // console.log(JSON.stringify(data));
       return data;
     } catch (error) {
       console.error(error);

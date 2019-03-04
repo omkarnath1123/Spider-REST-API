@@ -23,6 +23,7 @@
     "fs": "0.0.1-security",
     "mongoose": "^5.4.15",
     "prettier": "^1.16.4",
-    "puppeteer": "^1.12.2"
+    "puppeteer": "^1.12.2",
+    "response-time": "^2.3.2"
   }
 }

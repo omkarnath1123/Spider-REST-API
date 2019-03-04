@@ -1,10 +1,12 @@
 /*
+NOTE 
 All Brand data : list of Brands
 All Devices data : list of Devices
 Single Brand data : device count of single brand
 Single Device data : device data of single device
 */
 /*
+NOTE 
 crawler methods :
 crawlAllBrands, crawlAllBrandsDevices, crawlDeviceData
 mongo methods :
@@ -12,10 +14,10 @@ getAllBrands, getAllBrandsDevices, getDeviceData
 */
 
 class Master_Operator {
-  // Todo : used to return all brands and single brand count data
+  // ANCHOR  used to return all brands and single brand count data
   static getAllBrands(request) {
     return (async () => {
-      // Validate parameters needed for this operation
+      // SECTION Validate parameters needed for this operation
       if (!request || typeof request !== "object") {
         throw new Error("Invalid param. Expecting param of type object.");
       }
@@ -32,10 +34,10 @@ class Master_Operator {
     })();
   }
 
-  // Todo : used to return brand devices data from db
+  // ANCHOR  used to return brand devices data from db
   static getAllBrandsDevices(request) {
     return (async () => {
-      // Validate parameters needed for this operation
+      // SECTION Validate parameters needed for this operation
       if (!request || typeof request !== "object") {
         throw new Error("Invalid param. Expecting param of type object.");
       }
@@ -50,10 +52,10 @@ class Master_Operator {
     })();
   }
 
-  // Todo: used to crawl and update all brands and single brand count data ( also return data and write to db )
+  // ANCHOR  used to crawl and update all brands and single brand count data ( also return data and write to db )
   static crawlAllBrands(request) {
     return (async () => {
-      // Validate parameters needed for this operation
+      // SECTION Validate parameters needed for this operation
       if (!request || typeof request !== "object") {
         throw new Error("Invalid param. Expecting param of type object.");
       }
@@ -68,10 +70,10 @@ class Master_Operator {
     })();
   }
 
-  // Todo: used to crawl and update all brand devices data of db ( also return data and write to db )
+  // ANCHOR  used to crawl and update all brand devices data of db ( also return data and write to db )
   static crawlAllBrandsDevices(request) {
     return (async () => {
-      // Validate parameters needed for this operation
+      // SECTION Validate parameters needed for this operation
       if (!request || typeof request !== "object") {
         throw new Error("Invalid param. Expecting param of type object.");
       }
@@ -86,10 +88,10 @@ class Master_Operator {
     })();
   }
 
-  // Todo : Triggered by get, post request ( return a device data )
+  // ANCHOR  Triggered by get, post request ( return a device data )
   static getDeviceData(request) {
     return (async () => {
-      // Validate parameters needed for this operation
+      // SECTION Validate parameters needed for this operation
       if (!request || typeof request !== "object") {
         throw new Error("Invalid param. Expecting param of type object.");
       }
@@ -104,10 +106,10 @@ class Master_Operator {
     })();
   }
 
-  // Todo : Triggered by post, patch request ( crawl a device data ) ( also return data and write to db )
+  // ANCHOR  Triggered by post, patch request ( crawl a device data ) ( also return data and write to db )
   static crawlDeviceData(request) {
     return (async () => {
-      // Validate parameters needed for this operation
+      // SECTION Validate parameters needed for this operation
       if (!request || typeof request !== "object") {
         throw new Error("Invalid param. Expecting param of type object.");
       }

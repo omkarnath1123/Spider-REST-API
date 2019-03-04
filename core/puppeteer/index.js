@@ -7,11 +7,11 @@ const env = process.env.NODE_ENV;
 
 module.exports = class Puppeteer {
   constructor(options) {
-    // Merge the default options with the client submitted options
+    // STUB Merge the default options with the client submitted options
     this.options = {
       params: {
-        // userDataDir: process.env.PUPPETEER_DIR || __tempDir,
-        // slowMo: 100,
+        // STUB userDataDir: process.env.PUPPETEER_DIR || __tempDir,
+        // STUB slowMo: 100,
         ignoreHTTPSErrors: true,
         headless: env === "production" || env === "staging",
         devtools:
@@ -58,7 +58,7 @@ module.exports = class Puppeteer {
     this.webPage.on("beforeunload", () => {
       console.log("Page confirmation beforeunload dialog found");
     });
-    // below this lines events are verified
+    // REVIEW below this lines events are verified
     this.webPage.on("close", () => {
       console.log("Page closed");
     });
@@ -88,7 +88,7 @@ module.exports = class Puppeteer {
 
   async openWebPage(url) {
     this.browserInstance = await puppeteer.launch(this.options.params);
-    // Todo: see why targetdestroyed is UnhandledPromiseRejectionWarning
+    // REVIEW see why targetdestroyed is UnhandledPromiseRejectionWarning
     // this.browserInstance.on("targetdestroyed", async () =>
     //   console.log(
     //     "Target destroyed. Pages count :" +

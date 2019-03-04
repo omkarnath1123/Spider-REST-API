@@ -15,7 +15,7 @@ class BrandsDevices {
 
   async header() {
     try {
-      // implement select proxy later
+      // TODO implement select proxy later
       // let proxies = await this.getProxyAndPort();
       // try to aggregate and update in db as processing
 
@@ -27,7 +27,7 @@ class BrandsDevices {
         this.url.web_page_link
       );
       let Devices = await this.getJSON();
-      console.log(JSON.stringify(Devices));
+      // console.log(JSON.stringify(Devices));
       this.page = null;
       await this.browserInstance.close();
       await this.updateDB(Devices);
@@ -44,7 +44,7 @@ class BrandsDevices {
   async getJSON() {
     let all_devices = [];
     await this.page.waitForSelector(".nav-pages > a");
-    // Todo: check why process.env.PAGE_BASE_URL ? undefined
+    // REVIEW check why process.env.PAGE_BASE_URL ? undefined
     let pages_links = await this.page.$$eval(".nav-pages > a", nodes =>
       nodes.map(node => {
         return "https://www.gsmarena.com/" + node.getAttribute("href");
@@ -69,7 +69,7 @@ class BrandsDevices {
     }
     let is_last_page = await this.page.$(".pages-next.disabled");
     let next_page = await this.page.$(".pages-next");
-    // && false to disable pagination
+    // NOTE && false to disable pagination
     if (!is_last_page && next_page) {
       try {
         await this.page.goto(pages_links[i]);
@@ -133,6 +133,7 @@ class BrandsDevices {
     );
   }
 
+  // FIXME complete implemention
   async getProxyAndPort() {
     this.page = await this.browserInstance.openWebPage(this.free_proxy_url);
     await this.page.evaluate(() => {

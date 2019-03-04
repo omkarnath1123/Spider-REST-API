@@ -2,11 +2,25 @@ let router = require("express").Router();
 let Master_Operator = require("../methods/master_operator");
 const { crawler_methods, mongo_methods } = require("../methods/utils");
 
-// add Authentication Later after first release
-// release github version after first successful routes
-// add nodemon -g to restart server automatically
+// TODO add nodemon -save to restart server automatically
+// TODO add Authentication Later after release v1.0.1
 /*
-Routes calls: ( includes crawler_methods and mongo_methods both )
+TODO Types of users
+1. administrator => read , write , delete
+2. developer/premium_user => read , write
+3. customer => read
+*/
+/*
+TODO get => only read data from db
+post => get current data from db and start crawling for new data
+patch => only crawl data and return "will done" response
+delete => only delete data to db ( need Admin/developer access )
+*/
+
+/*
+NOTE : only shows data return format
+REVIEW ( includes crawler_methods and mongo_methods both )
+For more information, visit: https://github.com/omkarnath1123/Spider-REST-API
 http://localhost:8080/Brands ( array of Brands )
 warning : never throw web_page_link in REST API ( REST API should not know the consumer where the data come from )
 i.e.
@@ -24,15 +38,14 @@ http://localhost:8080/Devices ( read the all_devices array from Brands and retur
 warning : never throw web_page_link ( in this case device info link ) in REST API ( REST API should not know the consumer where the data come from )
 Todo : crawler and object is to be made
 
-
 http://localhost:8080/Device/Model
 warning : never throw web_page_link ( in this case device info link ) in REST API ( REST API should not know the consumer where the data come from )
 Todo : crawler and object is to be made
-
 */
 
-// add when error is present write error in file with error.stack { for server case } current req.params and req.body { if possible } and current date
 /*
+REVIEW 
+For more information, visit: https://github.com/omkarnath1123/Spider-REST-API/wiki
 Types of router call or Crawler call
 1. get all Mobile phone companies page
 2. get all devices of particular company
@@ -40,27 +53,14 @@ Types of router call or Crawler call
 4. get if response is not there send work is pending to json
 */
 
-/*
-Types of users
-1. administrator => read , write , delete
-2. developer => read , write
-3. customer => read
-*/
-
-/*
-get => only read data from db
-post => get current data from db and start crawling for new data
-patch => only crawl data and return "will done" response
-delete => only delete data to db ( need Admin and developer access )
-*/
-
 let methods = ["Brand", "Brands", "Device", "Devices"];
+// REVIEW 
 // Brands : return [] DONE
 // Brand::company : return [] DONE
-// Devices: return [] { "company" : "XYZ" }
-// Device::model : return [] { "company" : "XYZ" }
+// Devices: return [] { "company" : "XYZ" } DONE
+// Device::model : return [] { "company" : "XYZ" } DONE
 
-function showRequestParams(req, res, next) {
+async function showRequestParams(req, res, next) {
   console.log("Request created at : " + new Date());
   console.log("Request URL :" + req.originalUrl);
   console.log("Request params :" + JSON.stringify(req.params));
@@ -76,73 +76,86 @@ function showRequestParams(req, res, next) {
     (req.params.method === "Devices" && !req.params.company) ||
     (req.params.method === "Devices" && req.params.model)
   ) {
-    res.json({
+    res.header("Content-Type", "application/json");
+    let results = {
       success: false,
       message: "{ UNKNOWN URI } Please hit a valid URI"
-    });
+    };
+    await res.send(JSON.stringify(results, null, 4));
     return;
   }
   return next();
 }
+
 async function readBrands(req, res, next) {
   if (!methods.includes(req.params.method)) {
-    await res.json({
+    res.header("Content-Type", "application/json");
+    let results = {
       success: false,
-      message: "{ UNKNOWN URI } please hit correct api URI"
-    });
+      message: "{ UNKNOWN URI } Please hit a valid URI"
+    };
+    await res.send(JSON.stringify(results, null, 4));
     return;
   }
   try {
     let response = await Master_Operator[mongo_methods[req.params.method]](
       req.body
     );
-    await res.json({
-      success: true,
-      response: response
-    });
+    res.header("Content-Type", "application/json");
+    let results = { success: true, response: response };
+    await res.send(JSON.stringify(results, null, 4));
   } catch (error) {
     console.error(error);
-    // Todo: write error to SERVER_ERRORS file in root dir
     console.log(error.stack);
-    await res.json({
+    res.header("Content-Type", "application/json");
+    let results = {
       success: false,
       message: "Server Crashed contact your network administrator",
       stack: error.stack
-    });
+    };
+    await res.send(JSON.stringify(results, null, 4));
     return;
   }
   return next();
 }
+
 async function crawlBrands(req, res, next) {
   if (!methods.includes(req.params.method)) {
-    await res.json({
+    res.header("Content-Type", "application/json");
+    let results = {
       success: false,
       message: "{ UNKNOWN URI } please hit correct api URI"
-    });
+    };
+    await res.send(JSON.stringify(results, null, 4));
     return;
   }
   try {
     let response = await Master_Operator[crawler_methods[req.params.method]](
       req.body
     );
-    // FixMe: fix return statement for put req
+    // FIXME  fix return statement for put req
+    // res.header("Content-Type", "application/json");
+    // let results = {success: false,response: response};
+    // await res.send(JSON.stringify(results, null, 4));
     return next();
-    // await res.json({
-    //   success: true,
-    //   response: response
-    // });
   } catch (error) {
     console.error(error);
-    // Todo: write error to SERVER_ERRORS file in root dir
     console.log(error.stack);
-    await res.json({
+    res.header("Content-Type", "application/json");
+    let results = {
       success: false,
       message: "Server Crashed contact your network administrator",
       stack: error.stack
-    });
+    };
+    await res.send(JSON.stringify(results, null, 4));
   }
   return next();
 }
+
+// for page icon
+router.get("/favicon.ico/", function(req, res, next) {
+  return res.sendFile(`${process.env.ROOT_DIR}/Examples/favicon.ico`);
+});
 
 // BRAND DATA METHODS
 router.get(
@@ -154,8 +167,8 @@ router.get(
   ],
   [showRequestParams, readBrands]
 );
-// here post req body is empty can be implemented as get req
-// post method is only accessible to developer and admin
+
+// TODO post method is only accessible to developer and admin
 router.post(
   [
     "/:method/",
@@ -166,12 +179,12 @@ router.post(
   [showRequestParams, readBrands, crawlBrands]
 );
 
-// Todo: implement others
+// TODO  implement others
+// FIXME change 3.5mm jack to 35mm_jack
 // these methods are idempotent { and res should be implemented in that way }
 router.patch("/:method/", [showRequestParams]);
 router.delete("/:method/", [showRequestParams]);
-// search for implementation
-router.copy("/:method/", [showRequestParams]);
+router.put("/:method/", [showRequestParams]);
 
 router.use(function(req, res, next) {
   if (!req.route) return next(new Error("404"));

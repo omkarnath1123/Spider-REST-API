@@ -14,7 +14,7 @@ class BrandsDeviceData {
 
   async header() {
     try {
-      // implement select proxy later
+      // TODO implement select proxy later
       // let proxies = await this.getProxyAndPort();
       // try to aggregate and update in db as processing
 
@@ -26,7 +26,7 @@ class BrandsDeviceData {
         this.url.product_page_link
       );
       let Devices = await this.getJSON();
-      console.log(JSON.stringify(Devices));
+      // console.log(JSON.stringify(Devices));
       this.page = null;
       await this.browserInstance.close();
       Devices = await this.updateDB(Devices);
@@ -119,6 +119,7 @@ class BrandsDeviceData {
     }
   }
 
+  // FIXME complete implemention
   async getURL() {
     if (this.context.company && this.context.model) {
       return await Devices.findOne(

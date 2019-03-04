@@ -10,15 +10,16 @@
       "name": "Launch Program",
       "program": "${workspaceFolder}/routes/app.js",
       "env": {
+        "TEST": "production",
         "NODE_ENV": "development",
-        // "NODE_ENV": "staging",
-        // "NODE_ENV": "production",
         "LOG_PATH": "${workspaceFolder}",
         "PROXY_URL": "https://www.socks-proxy.net/",
         "PORT": "5000",
         "PAGE_BASE_URL": "https://www.gsmarena.com/",
+        "SCREENSHOTS_DIR": "${workspaceFolder}",
+        "ROOT_DIR": "${workspaceFolder}",
         // use admin to call delete request
-        // "MONGODB_AUTH": "mongodb+srv://developer:developerAtMongo@cluster0-l9wqt.mongodb.net/MobileArena?retryWrites=true"
+        "MONGODB_AUTH": "mongodb+srv://developer:developerAtMongo@cluster0-l9wqt.mongodb.net/MobileArena?retryWrites=true"
       },
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",

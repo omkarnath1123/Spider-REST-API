@@ -14,7 +14,7 @@ class Brands {
 
   async header() {
     try {
-      // Todo : update code syntax {take reference from Devices}
+      // TODO update code syntax {take reference from Devices}
       // implement select proxy later
       // let proxies = await this.getProxyAndPort();
       // try to aggregate and update in db as processing ? is necessary : to check for which company res has failed
@@ -23,7 +23,7 @@ class Brands {
       let Brands = await this.getTableData();
       this.page = null;
       await this.browserInstance.close();
-      console.log(JSON.stringify(Brands));
+      // console.log(JSON.stringify(Brands));
       Brands = await this.updateDB(Brands);
       return Brands;
     } catch (error) {
@@ -83,6 +83,7 @@ class Brands {
     return Brands;
   }
 
+  // FIXME complete implemention
   async getProxyAndPort() {
     this.page = await this.browserInstance.openWebPage(this.free_proxy_url);
     await this.page.evaluate(() => {

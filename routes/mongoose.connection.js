@@ -6,13 +6,13 @@ const mongoConfig = {
   reconnectInterval: 1000,
   family: 4
 };
-// Bring Mongoose into the app
+// NOTE Bring Mongoose into the app
 const mongoose = require("mongoose");
-// Build the connection string
+// NOTE Build the connection string
 const dbURI =
   process.env.MONGODB_AUTH || "mongodb://localhost:27017/MobileArena";
 
-// Create the database connection
+// NOTE Create the database connection
 mongoose.connect(dbURI, mongoConfig);
 if (process.env.NODE_ENV !== "production") {
   mongoose.set("debug", true);
@@ -22,23 +22,23 @@ if (process.env.NODE_ENV !== "production") {
   });
 }
 
-// make mongoose to return native promise
+// NOTE make mongoose to return native promise
 mongoose.Promise = global.Promise;
 
-// CONNECTION EVENTS
-// When successfully connected
+// ANCHOR CONNECTION EVENTS
+// NOTE When successfully connected
 mongoose.connection.on("connected", function() {
   console.log("Mongoose default connection open to " + dbURI);
 });
-// If the connection throws an error
+// NOTE If the connection throws an error
 mongoose.connection.on("error", function(err) {
   console.log("Mongoose default connection error: " + err);
 });
-// When the connection is disconnected
+// NOTE When the connection is disconnected
 mongoose.connection.on("disconnected", function() {
   console.log("Mongoose default connection disconnected");
 });
-// If the Node process ends, close the Mongoose connection
+// NOTE If the Node process ends, close the Mongoose connection
 process.on("SIGINT", function() {
   mongoose.connection.close(function() {
     console.log(

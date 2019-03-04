@@ -7,13 +7,13 @@ class Brands {
     this.context = context;
   }
   async header() {
-    // also update in crawler_methods
+    // SECTION also update in crawler_methods
     if (this.context.company) {
       let filtered_brand = await Company.find(
         { company: this.context.company },
         { company: 1, no_of_devices: 1, _id: 0 }
       );
-      console.log(JSON.stringify(filtered_brand));
+      // console.log(JSON.stringify(filtered_brand));
       return filtered_brand;
     }
     let all_current_brands = await Company.find(
