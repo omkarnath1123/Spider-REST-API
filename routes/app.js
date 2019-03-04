@@ -42,7 +42,7 @@ app.listen(port, function() {
 
   // TODO  create .error automatically and use path library
   console.error = function(errMessage) {
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.NODE_ENV !== "production") {
       if (!fs.existsSync(`${process.env.LOG_PATH}/error.txt`)) {
         fs.writeFileSync(
           `${process.env.LOG_PATH}/error.txt`,
@@ -73,7 +73,6 @@ app.listen(port, function() {
       if (fileSizeInMegabytes > 25) {
         fs.unlink(`${process.env.LOG_PATH}/log.txt`, err => {
           if (err) throw err;
-          console.log("path/file.txt was deleted");
         });
       }
       fs.appendFileSync(
@@ -86,7 +85,7 @@ app.listen(port, function() {
 
   // TODO  create .warning automatically and use path library
   console.warning = function(warnMessage) {
-    if (process.env.NODE_ENV === "production") {
+    if (process.env.NODE_ENV !== "production") {
       if (!fs.existsSync(`${process.env.LOG_PATH}/warning.txt`)) {
         fs.writeFileSync(
           `${process.env.LOG_PATH}/warning.txt`,
