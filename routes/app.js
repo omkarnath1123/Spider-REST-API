@@ -5,7 +5,7 @@ require("./mongoose.connection");
 let express = require("express");
 // const path = require("path");
 // const morgan = require("morgan");
-const responseTime = require('response-time')
+const responseTime = require("response-time");
 let app = express();
 
 app.use(logResponseBody);
@@ -105,6 +105,7 @@ app.listen(port, function() {
 })();
 
 function logResponseBody(req, res, next) {
+  if (process.env.NODE_ENV === "production") return;
   const oldWrite = res.write,
     oldEnd = res.end;
   const chunks = [];
