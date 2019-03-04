@@ -1,6 +1,9 @@
 let router = require("express").Router();
 let Master_Operator = require("../methods/master_operator");
 const { crawler_methods, mongo_methods } = require("../methods/utils");
+const crypto = require("crypto");
+const redis = require("./redis.connection");
+const client = redis.client;
 
 // TODO add nodemon -save to restart server automatically
 // TODO add Authentication Later after release v1.0.1
@@ -52,7 +55,8 @@ Types of router call or Crawler call
 */
 
 let methods = ["Brand", "Brands", "Device", "Devices"];
-// REVIEW 
+
+// REVIEW
 // Brands : return [] DONE
 // Brand::company : return [] DONE
 // Devices: return [] { "company" : "XYZ" } DONE
@@ -96,19 +100,80 @@ async function readBrands(req, res, next) {
     return;
   }
   try {
+    let params = JSON.stringify(req.params);
+    // let hash_string = hash.update(params, "utf-8");
+    let hash_string = crypto
+      .createHash("md5")
+      .update(params, "utf-8")
+      .digest("hex");
+    console.log(`Hash string for Redis : ${hash_string}`);
+
+    // NOTE Redis dont allow promises : create your own promise
+    // SECTION try to improve promises more
+    let redis_result = await new Promise(function(resolve, reject) {
+      try {
+        client.get(hash_string, function(error, result) {
+          if (error || !result) {
+            console.log(`${hash_string} is not present in Redis`);
+            resolve(false);
+          } else {
+            console.log(`${hash_string} is present in Redis : ${result}`);
+            res.header("Content-Type", "application/json");
+            let results = { success: true, response: JSON.parse(result) };
+            res.send(JSON.stringify(results, null, 4));
+            resolve(true);
+          }
+        });
+      } catch (err) {
+        reject(err);
+      }
+      setTimeout(() => {
+        reject("Redis timeout : 20 sec");
+      }, 20000);
+    });
+    // REVIEW if redis has value corresponding to hash
+    if (redis_result) {
+      return next();
+    }
+
     let response = await Master_Operator[mongo_methods[req.params.method]](
       req.body
     );
     res.header("Content-Type", "application/json");
     let results = { success: true, response: response };
     await res.send(JSON.stringify(results, null, 4));
+
+    // NOTE Redis dont allow promises : create your own promise
+    // SECTION try to improve promises more
+    await new Promise(function(resolve, reject) {
+      try {
+        client.get(hash_string, function(error, result) {
+          if (error || !result) {
+            console.log(`Adding ${hash_string} to Redis`);
+            // REVIEW add callback as fourth parameter
+            client.set(hash_string, JSON.stringify(response), "EX", 3600 * 1);
+            resolve(true);
+          } else {
+            console.log(`${hash_string} is already in Redis : ${result}`);
+            console.log("UPDATING the current Redis value");
+            client.set(hash_string, JSON.stringify(response), "EX", 3600 * 1);
+            resolve(true);
+          }
+        });
+      } catch (err) {
+        reject(err);
+      }
+      setTimeout(() => {
+        reject("Redis timeout : 20 sec");
+      }, 20000);
+    });
   } catch (error) {
     console.error(error);
     console.log(error.stack);
     res.header("Content-Type", "application/json");
     let results = {
       success: false,
-      message: "Server Crashed contact your network administrator",
+      message: `Server Crashed contact your network administrator : ${error}`,
       stack: error.stack
     };
     await res.send(JSON.stringify(results, null, 4));
@@ -142,7 +207,7 @@ async function crawlBrands(req, res, next) {
     res.header("Content-Type", "application/json");
     let results = {
       success: false,
-      message: "Server Crashed contact your network administrator",
+      message: `Server Crashed contact your network administrator : ${error}`,
       stack: error.stack
     };
     await res.send(JSON.stringify(results, null, 4));
@@ -178,7 +243,6 @@ router.post(
 );
 
 // TODO  implement others
-// FIXME change 3.5mm jack to 35mm_jack
 // these methods are idempotent { and res should be implemented in that way }
 // TODO add TOP 10 BY DAILY INTEREST and TOP 10 BY FANS in patch (https://www.gsmarena.com/rumored.php3)
 // TODO add "Rumor mill" devices in data

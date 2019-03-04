@@ -3,8 +3,7 @@
 const fs = require("fs");
 require("./mongoose.connection");
 let express = require("express");
-// const path = require("path");
-// const morgan = require("morgan");
+require("./redis.connection");
 const responseTime = require("response-time");
 let app = express();
 
