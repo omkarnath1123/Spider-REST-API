@@ -19,7 +19,10 @@
         "SCREENSHOTS_DIR": "${workspaceFolder}",
         "ROOT_DIR": "${workspaceFolder}",
         // use admin to call delete request
-        "MONGODB_AUTH": "mongodb+srv://developer:developerAtMongo@cluster0-l9wqt.mongodb.net/MobileArena?retryWrites=true"
+        "MONGODB_AUTH_TEMP": "mongodb+srv://developer:developerAtMongo@cluster0-l9wqt.mongodb.net/MobileArena?retryWrites=true",
+        "REDIS_PORT_TEMP" : "17285",
+        "REDIS_HOST_TEMP" : "redis-17285.c16.us-east-1-3.ec2.cloud.redislabs.com",
+        "REDIS_PASSWORD_TEMP" : "9818271889Abc!"
       },
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",

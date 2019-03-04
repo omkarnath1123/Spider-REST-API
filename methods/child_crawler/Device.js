@@ -49,11 +49,15 @@ class BrandsDeviceData {
         if (j === 0) {
           heading = await tr[j].$eval("th", node => node.innerText);
           heading = heading ? heading.trim().toLowerCase() : heading;
+          heading = heading.replace(/\s/g, "_");
         }
         let type = "";
         let check = await tr[j].$("td.ttl");
         if (check) {
           type = await tr[j].$eval("td.ttl", node => node.innerText);
+          type = type.trim();
+          type = type.replace(/\s/g, "_");
+          type = type.replace(/\./g, "");
         }
         let data = "";
         check = await tr[j].$("td.nfo");
@@ -63,7 +67,6 @@ class BrandsDeviceData {
         if (data === "" && type === "") {
           continue;
         }
-        type = type.trim();
         if (!type) {
           type = `${heading}_spec_${temp_keys}`;
           temp_keys++;
@@ -89,6 +92,11 @@ class BrandsDeviceData {
     if (info[3])
       device_info.storage = await info[3].$eval("span", node => node.innerText);
 
+    let comment = await this.page.$eval(
+      'p[data-spec="comment"]',
+      node => node.innerText
+    );
+    device_info.comment = comment || "";
     let urls = await this.page.$$eval("ul.article-info-meta > li > a", nodes =>
       nodes.map(node => {
         return "https://www.gsmarena.com/" + node.getAttribute("href");

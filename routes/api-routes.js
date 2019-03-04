@@ -16,7 +16,6 @@ post => get current data from db and start crawling for new data
 patch => only crawl data and return "will done" response
 delete => only delete data to db ( need Admin/developer access )
 */
-
 /*
 NOTE : only shows data return format
 REVIEW ( includes crawler_methods and mongo_methods both )
@@ -42,7 +41,6 @@ http://localhost:8080/Device/Model
 warning : never throw web_page_link ( in this case device info link ) in REST API ( REST API should not know the consumer where the data come from )
 Todo : crawler and object is to be made
 */
-
 /*
 REVIEW 
 For more information, visit: https://github.com/omkarnath1123/Spider-REST-API/wiki
@@ -182,8 +180,12 @@ router.post(
 // TODO  implement others
 // FIXME change 3.5mm jack to 35mm_jack
 // these methods are idempotent { and res should be implemented in that way }
+// TODO add TOP 10 BY DAILY INTEREST and TOP 10 BY FANS in patch (https://www.gsmarena.com/rumored.php3)
+// TODO add "Rumor mill" devices in data
 router.patch("/:method/", [showRequestParams]);
+// TODO delete brands and devices from data
 router.delete("/:method/", [showRequestParams]);
+// TODO add LATEST DEVICES and IN STORES NOW in put (https://www.gsmarena.com/)
 router.put("/:method/", [showRequestParams]);
 
 router.use(function(req, res, next) {
