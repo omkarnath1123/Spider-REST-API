@@ -216,9 +216,9 @@ async function crawlBrands(req, res, next) {
 }
 
 // for page icon
-router.get("/favicon.ico/", function(req, res, next) {
-  return res.sendFile(`${process.env.ROOT_DIR}/Examples/favicon.ico`);
-});
+// router.get("/favicon.ico/", function(req, res, next) {
+//   return res.sendFile(`${process.env.ROOT_DIR}/Examples/favicon.ico`);
+// });
 
 // BRAND DATA METHODS
 router.get(
