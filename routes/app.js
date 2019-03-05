@@ -68,8 +68,8 @@ app.listen(port, function() {
       const stats = fs.statSync(`${process.env.LOG_PATH}/log.txt`);
       const fileSizeInBytes = stats.size;
       const fileSizeInMegabytes = fileSizeInBytes / 1000000.0;
-      // NOTE delete file if it exeeds 25mb
-      if (fileSizeInMegabytes > 25) {
+      // NOTE delete file if it exeeds 5mb
+      if (fileSizeInMegabytes > 5) {
         fs.unlink(`${process.env.LOG_PATH}/log.txt`, err => {
           if (err) throw err;
         });

@@ -22,9 +22,10 @@
     "crypto": "^1.0.1",
     "express": "^4.16.4",
     "fs": "0.0.1-security",
-    "mongoose": "^5.4.15",
+    "mongoose": "^5.4.17",
     "prettier": "^1.16.4",
     "puppeteer": "^1.12.2",
+    "redis": "^2.8.0",
     "response-time": "^2.3.2"
   }
 }
