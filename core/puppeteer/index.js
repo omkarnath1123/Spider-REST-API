@@ -1,8 +1,4 @@
 const puppeteer = require("puppeteer");
-const path = require("path");
-const fs = require("fs");
-const __tempDir =
-  process.env.SCREENSHOTS_DIR || path.join(__dirname, "/../../../tmp/");
 const env = process.env.NODE_ENV;
 
 module.exports = class Puppeteer {
