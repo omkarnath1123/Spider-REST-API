@@ -6,11 +6,15 @@
   "keywords": ["node", "express", "API"],
   "image": "heroku/nodejs",
   "env": {
+    "TEST": "production",
     "NODE_ENV": "production",
     "PROXY_URL": "https://www.socks-proxy.net/",
     "PORT": "5000",
     "PAGE_BASE_URL": "https://www.gsmarena.com/",
-    "MONGODB_AUTH": "mongodb+srv://developer:developerAtMongo@cluster0-l9wqt.mongodb.net/test?retryWrites=true"
+    "MONGODB_AUTH": "mongodb+srv://developer:developerAtMongo@cluster0-l9wqt.mongodb.net/test?retryWrites=true",
+    "REDIS_PORT": "17285",
+    "REDIS_HOST": "redis-17285.c16.us-east-1-3.ec2.cloud.redislabs.com",
+    "REDIS_PASSWORD": "9818271889Abc!"
   },
   "addons": [
     {

@@ -1,12 +1,13 @@
 const puppeteer = require("puppeteer");
 const env = process.env.NODE_ENV;
-
+const path = require("path");
+const PUPPETEER_DIR = path.dirname(__filename);
 module.exports = class Puppeteer {
   constructor(options) {
     // STUB Merge the default options with the client submitted options
     this.options = {
       params: {
-        // STUB userDataDir: process.env.PUPPETEER_DIR || __tempDir,
+        // STUB userDataDir: PUPPETEER_DIR,
         // STUB slowMo: 100,
         ignoreHTTPSErrors: true,
         headless: env === "production" || env === "staging",
@@ -28,7 +29,6 @@ module.exports = class Puppeteer {
       },
       ...options
     };
-    this.screenShotDir = __tempDir;
   }
 
   bindPageEvents() {

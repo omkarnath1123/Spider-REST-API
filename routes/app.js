@@ -5,7 +5,9 @@ require("./mongoose.connection");
 let express = require("express");
 require("./redis.connection");
 const responseTime = require("response-time");
+const path = require("path");
 let app = express();
+const LOG_PATH = path.dirname(__filename);
 
 app.use(logResponseBody);
 app.use(
@@ -34,6 +36,30 @@ app.listen(port, function() {
 //   res.sendFile((process.env.APP_ROOT_PATH || path.join(__dirname, '/build')) + '/index.html');
 // });
 
+// NOTE reset LOG, WARNING and ERROR .txt
+(function() {
+  if (process.env.RESET_LOGS === "true") {
+    if (fs.existsSync(`${LOG_PATH}/log.txt`)) {
+      fs.unlinkSync(`${LOG_PATH}/log.txt`);
+    }
+    if (fs.existsSync(`${LOG_PATH}/error.txt`)) {
+      fs.unlinkSync(`${LOG_PATH}/error.txt`);
+    }
+    if (fs.existsSync(`${LOG_PATH}/warning.txt`)) {
+      fs.unlinkSync(`${LOG_PATH}/warning.txt`);
+    }
+    if (!fs.existsSync(`${LOG_PATH}/log.txt`)) {
+      fs.writeFileSync(`${LOG_PATH}/log.txt`);
+    }
+    if (!fs.existsSync(`${LOG_PATH}/error.txt`)) {
+      fs.writeFileSync(`${LOG_PATH}/error.txt`);
+    }
+    if (!fs.existsSync(`${LOG_PATH}/warning.txt`)) {
+      fs.writeFileSync(`${LOG_PATH}/warning.txt`);
+    }
+  }
+})();
+
 (function() {
   let _log = console.log;
   let _error = console.error;
@@ -41,64 +67,47 @@ app.listen(port, function() {
 
   // TODO  create .error automatically and use path library
   console.error = function(errMessage) {
-    if (process.env.NODE_ENV !== "production") {
-      if (!fs.existsSync(`${process.env.LOG_PATH}/error.txt`)) {
-        fs.writeFileSync(
-          `${process.env.LOG_PATH}/error.txt`,
-          fileContent,
-          err => {
-            if (err) throw err;
-          }
-        );
-      }
-      fs.appendFileSync(
-        `${process.env.LOG_PATH}/error.txt`,
-        new Date() + " : " + errMessage + "\n"
-      );
+    if (!fs.existsSync(`${LOG_PATH}/error.txt`)) {
+      fs.writeFileSync(`${LOG_PATH}/error.txt`);
     }
+    fs.appendFileSync(
+      `${LOG_PATH}/error.txt`,
+      new Date() + " : " + errMessage + "\n"
+    );
     _error.apply(console, arguments);
   };
 
   // TODO  create .log automatically and use path library
   console.log = function(logMessage) {
-    if (process.env.NODE_ENV !== "production") {
-      if (!fs.existsSync(`${process.env.LOG_PATH}/log.txt`)) {
-        fs.writeFileSync(`${process.env.LOG_PATH}/log.txt`);
-      }
-      const stats = fs.statSync(`${process.env.LOG_PATH}/log.txt`);
-      const fileSizeInBytes = stats.size;
-      const fileSizeInMegabytes = fileSizeInBytes / 1000000.0;
-      // NOTE delete file if it exeeds 5mb
-      if (fileSizeInMegabytes > 5) {
-        fs.unlink(`${process.env.LOG_PATH}/log.txt`, err => {
-          if (err) throw err;
-        });
-      }
-      fs.appendFileSync(
-        `${process.env.LOG_PATH}/log.txt`,
-        new Date() + " : " + logMessage + "\n"
-      );
+    if (!fs.existsSync(`${LOG_PATH}/log.txt`)) {
+      fs.writeFileSync(`${LOG_PATH}/log.txt`);
     }
+    const stats = fs.statSync(`${LOG_PATH}/log.txt`);
+    const fileSizeInBytes = stats.size;
+    const fileSizeInMegabytes = fileSizeInBytes / 1000000.0;
+    // NOTE delete file if it exeeds 5mb
+    if (fileSizeInMegabytes > 5) {
+      fs.unlink(`${LOG_PATH}/log.txt`, err => {
+        if (err) throw err;
+      });
+    }
+
+    fs.appendFileSync(
+      `${LOG_PATH}/log.txt`,
+      new Date() + " : " + logMessage + "\n"
+    );
     _log.apply(console, arguments);
   };
 
   // TODO  create .warning automatically and use path library
   console.warning = function(warnMessage) {
-    if (process.env.NODE_ENV !== "production") {
-      if (!fs.existsSync(`${process.env.LOG_PATH}/warning.txt`)) {
-        fs.writeFileSync(
-          `${process.env.LOG_PATH}/warning.txt`,
-          fileContent,
-          err => {
-            if (err) throw err;
-          }
-        );
-      }
-      fs.appendFileSync(
-        `${process.env.LOG_PATH}/warning.txt`,
-        new Date() + " : " + warnMessage + "\n"
-      );
+    if (!fs.existsSync(`${LOG_PATH}/warning.txt`)) {
+      fs.writeFileSync(`${LOG_PATH}/warning.txt`);
     }
+    fs.appendFileSync(
+      `${LOG_PATH}/warning.txt`,
+      new Date() + " : " + warnMessage + "\n"
+    );
     _warning.apply(console, arguments);
   };
 })();
@@ -117,7 +126,7 @@ function logResponseBody(req, res, next) {
     if (chunk) chunks.push(chunk);
     const body = Buffer.concat(chunks).toString("utf8");
     console.log(
-      `http://localhost:${port}${req.path} : ` + "Response Body : " + body
+      `http://localhost:${port}${req.path} : Response Body : ${body}`
     );
     oldEnd.apply(res, arguments);
   };
@@ -127,7 +136,6 @@ function logResponseBody(req, res, next) {
 app.listen(function() {
   console.log("Environment Loaded | " + process.env.TEST || "development");
   console.log("App current environment  | " + process.env.NODE_ENV || "local");
-  console.log(
-    "App Screenshots DIR | " + process.env.SCREENSHOTS_DIR || "default"
-  );
+  console.log("App Screenshots DIR | " + LOG_PATH || "default");
+  console.log(`Is logs are reset | ${process.env.RESET_LOGS}`);
 });

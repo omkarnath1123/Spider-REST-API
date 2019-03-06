@@ -6,6 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
+  "engines": {
+    "node": "10.9.0"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/omkarnath1123/Spider-REST-API.git"
@@ -23,6 +26,7 @@
     "express": "^4.16.4",
     "fs": "0.0.1-security",
     "mongoose": "^5.4.17",
+    "path": "^0.12.7",
     "prettier": "^1.16.4",
     "puppeteer": "^1.12.2",
     "redis": "^2.8.0",

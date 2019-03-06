@@ -4,6 +4,8 @@ const { crawler_methods, mongo_methods } = require("../methods/utils");
 const crypto = require("crypto");
 const redis = require("./redis.connection");
 const client = redis.client;
+const path = require('path');
+const ROOT_DIR = path.dirname(__filename);
 
 // TODO add nodemon -save to restart server automatically
 // TODO add Authentication Later after release v1.0.1
@@ -216,9 +218,9 @@ async function crawlBrands(req, res, next) {
 }
 
 // for page icon
-// router.get("/favicon.ico/", function(req, res, next) {
-//   return res.sendFile(`${process.env.ROOT_DIR}/Examples/favicon.ico`);
-// });
+router.get("/favicon.ico/", function(req, res, next) {
+  return res.sendFile(`${ROOT_DIR}/Examples/favicon.ico`);
+});
 
 // BRAND DATA METHODS
 router.get(
@@ -254,7 +256,7 @@ router.put("/:method/", [showRequestParams]);
 
 router.use(function(req, res, next) {
   if (!req.route) return next(new Error("404"));
-  next();
+  return next();
 });
 
 module.exports = router;
