@@ -32,6 +32,7 @@ class BrandsDeviceData {
       Devices = await this.updateDB(Devices);
       return Devices;
     } catch (error) {
+      // FIXME add error to crawler_error feild
       if (this.page) await this.browserInstance.close();
       console.error(error);
     }

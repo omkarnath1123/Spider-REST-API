@@ -27,6 +27,7 @@ class Brands {
       Brands = await this.updateDB(Brands);
       return Brands;
     } catch (error) {
+      // FIXME add error to crawler_error feild
       if (this.page) await this.browserInstance.close();
       console.error(error);
     }

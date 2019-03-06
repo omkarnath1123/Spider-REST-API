@@ -4,7 +4,7 @@ const { crawler_methods, mongo_methods } = require("../methods/utils");
 const crypto = require("crypto");
 const redis = require("./redis.connection");
 const client = redis.client;
-const path = require('path');
+const path = require("path");
 const ROOT_DIR = path.dirname(__filename);
 
 // TODO add nodemon -save to restart server automatically
@@ -244,15 +244,73 @@ router.post(
   [showRequestParams, readBrands, crawlBrands]
 );
 
+// PUT,PATCH and DELETE methods are idempotent { and res should be implemented in that way }
+// fetch TOP 10 BY DAILY INTEREST and TOP 10 BY FANS in patch
+async function printRequest(req, res, next) {
+  console.log("Request created at : " + new Date());
+  console.log("Request URL :" + req.originalUrl);
+  console.log("Request TYPE :" + req.method);
+  console.log("Request Body :" + JSON.stringify(req.body));
+  return next();
+}
+
+async function readDailyIntrest(req, res, next) {
+  try {
+    let response = await Master_Operator[mongo_methods.DailyIntrest](req.body);
+    res.header("Content-Type", "application/json");
+    let results = { success: true, response: response };
+    await res.send(JSON.stringify(results, null, 4));
+  } catch (error) {
+    console.error(error);
+    console.log(error.stack);
+    res.header("Content-Type", "application/json");
+    let results = {
+      success: false,
+      message: `Server Crashed contact your network administrator : ${error}`,
+      stack: error.stack
+    };
+    await res.send(JSON.stringify(results, null, 4));
+    return;
+  }
+  return next();
+}
+
+async function getDailyIntrest(req, res, next) {
+  try {
+    let response = await Master_Operator[crawler_methods.DailyIntrest](
+      req.body
+    );
+    // FIXME  fix return statement for put req
+    // res.header("Content-Type", "application/json");
+    // let results = { success: true, response: response };
+    // await res.send(JSON.stringify(results, null, 4));
+  } catch (error) {
+    console.error(error);
+    console.log(error.stack);
+    res.header("Content-Type", "application/json");
+    let results = {
+      success: false,
+      message: `Server Crashed contact your network administrator : ${error}`,
+      stack: error.stack
+    };
+    await res.send(JSON.stringify(results, null, 4));
+    return;
+  }
+  return next();
+}
+
+router.patch("/Device/DAILY%20INTEREST", [
+  printRequest,
+  readDailyIntrest,
+  getDailyIntrest
+]);
+
 // TODO  implement others
-// these methods are idempotent { and res should be implemented in that way }
-// TODO add TOP 10 BY DAILY INTEREST and TOP 10 BY FANS in patch (https://www.gsmarena.com/rumored.php3)
-// TODO add "Rumor mill" devices in data
-router.patch("/:method/", [showRequestParams]);
 // TODO delete brands and devices from data
-router.delete("/:method/", [showRequestParams]);
-// TODO add LATEST DEVICES and IN STORES NOW in put (https://www.gsmarena.com/)
-router.put("/:method/", [showRequestParams]);
+router.delete("/:method/", [printRequest]);
+
+// TODO add LATEST DEVICES and IN STORES NOW in put
+router.put("/:method/", [printRequest]);
 
 router.use(function(req, res, next) {
   if (!req.route) return next(new Error("404"));

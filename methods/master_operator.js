@@ -124,6 +124,22 @@ class Master_Operator {
     })();
   }
 
+  // ANCHOR crawl customer daily intrest
+  static crawlDailyIntrest(request) {
+    return (async () => {
+      const Crawler = require(`./child_crawler/UserData.js`);
+      return new Crawler(request).header();
+    })();
+  }
+
+  // ANCHOR get customer daily intrest
+  static getDailyIntrest(request) {
+    return (async () => {
+      const Mongo = require(`./mongo_methods/UserData.js`);
+      return new Mongo(request).header();
+    })();
+  }
+
   // Todo : add Deletion item from collection
 }
 
@@ -133,5 +149,7 @@ module.exports = {
   crawlAllBrands: Master_Operator.crawlAllBrands,
   crawlAllBrandsDevices: Master_Operator.crawlAllBrandsDevices,
   getDeviceData: Master_Operator.getDeviceData,
-  crawlDeviceData: Master_Operator.crawlDeviceData
+  crawlDeviceData: Master_Operator.crawlDeviceData,
+  crawlDailyIntrest: Master_Operator.crawlDailyIntrest,
+  getDailyIntrest: Master_Operator.getDailyIntrest
 };

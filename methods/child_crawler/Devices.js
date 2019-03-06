@@ -36,6 +36,7 @@ class BrandsDevices {
       });
       return Devices;
     } catch (error) {
+      // FIXME add error to crawler_error feild
       console.error(error);
       if (this.page) await this.browserInstance.close();
     }

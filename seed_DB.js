@@ -22,21 +22,35 @@ let wait = ms => new Promise((r, j) => setTimeout(r, ms));
 
 async function process() {
   // For Brands
-  // await doAxios("http://localhost:8080/Brands");
+  // await doAxios("http://localhost:5000/Brands");
+
   // For Devices list
   // let res = await Brands.find({}, { company: 1, _id: 0 });
   // for (let i = 0; i < res.length; i++) {
-  //   await doAxios(`http://localhost:8080/Devices/${res[i].company}`);
+  //   await doAxios(`http://localhost:5000/Devices/${res[i].company}`);
   //   await wait(30000);
   // }
+
   // For a Device data
   // let res = await Devices.find({}, { product_name: 1, company: 1, _id: 0 });
   // for (let i = 0; i < res.length; i++) {
   //   await doAxios(
-  //     `http://localhost:8080/Device/${res[i].company}/${res[i].product_name}`
+  //     `http://localhost:5000/Device/${res[i].company}/${res[i].product_name}`
   //   );
   //   await wait(15000);
   // }
+
+  // For missing unscraped data
+  let res = await Devices.find(
+    { review: { $exists: false }, os: { $exists: false } },
+    { product_name: 1, company: 1, _id: 0 }
+  );
+  for (let i = 0; i < res.length; i++) {
+    await doAxios(
+      `http://localhost:5000/Device/${res[i].company}/${res[i].product_name}`
+    );
+    await wait(15000);
+  }
 }
 
 process();
