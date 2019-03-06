@@ -14,13 +14,17 @@ const dbURI =
 
 // NOTE Create the database connection
 mongoose.connect(dbURI, mongoConfig);
-if (process.env.NODE_ENV !== "production") {
-  mongoose.set("debug", true);
-} else {
-  mongoose.set("debug", (collectionName, method, query, doc) => {
-    console.log(`${collectionName}.${method}`, JSON.stringify(query), doc);
-  });
-}
+
+mongoose.set("debug", true);
+
+// TODO check later for mongo debug logs
+// if (process.env.NODE_ENV !== "production") {
+//   mongoose.set("debug", true);
+// } else {
+//   mongoose.set("debug", (collectionName, method, query, doc) => {
+//     console.log(`${collectionName}.${method}`, JSON.stringify(query), doc);
+//   });
+// }
 
 // NOTE make mongoose to return native promise
 mongoose.Promise = global.Promise;

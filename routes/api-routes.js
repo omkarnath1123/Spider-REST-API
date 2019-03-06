@@ -5,7 +5,7 @@ const crypto = require("crypto");
 const redis = require("./redis.connection");
 const client = redis.client;
 const path = require("path");
-const ROOT_DIR = path.dirname(__filename);
+const ROOT_DIR = path.dirname(__dirname);
 
 // TODO add nodemon -save to restart server automatically
 // TODO add Authentication Later after release v1.0.1

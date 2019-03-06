@@ -7,7 +7,7 @@ require("./redis.connection");
 const responseTime = require("response-time");
 const path = require("path");
 let app = express();
-const LOG_PATH = path.dirname(__filename);
+const LOG_PATH = path.dirname(__dirname);
 
 app.use(logResponseBody);
 app.use(
@@ -113,7 +113,7 @@ app.listen(port, function() {
 })();
 
 function logResponseBody(req, res, next) {
-  if (process.env.NODE_ENV === "production") return;
+  // if (process.env.NODE_ENV === "production") return;
   const oldWrite = res.write,
     oldEnd = res.end;
   const chunks = [];
