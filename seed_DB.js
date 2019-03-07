@@ -41,16 +41,17 @@ async function process() {
   // }
 
   // For missing unscraped data
-  let res = await Devices.find(
-    { review: { $exists: false }, os: { $exists: false } },
-    { product_name: 1, company: 1, _id: 0 }
-  );
-  for (let i = 0; i < res.length; i++) {
-    await doAxios(
-      `http://localhost:5000/Device/${res[i].company}/${res[i].product_name}`
-    );
-    await wait(15000);
-  }
+  // let res = await Devices.find(
+  //   { review: { $exists: false }, os: { $exists: false } },
+  //   { product_name: 1, company: 1, _id: 0 }
+  // );
+  // res.reverse();
+  // for (let i = 0; i < res.length; i++) {
+  //   await doAxios(
+  //     `http://localhost:5000/Device/${res[i].company}/${res[i].product_name}`
+  //   );
+  //   await wait(15000);
+  // }
 }
 
 process();

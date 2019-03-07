@@ -28,7 +28,7 @@
     "mongoose": "^5.4.17",
     "path": "^0.12.7",
     "prettier": "^1.16.4",
-    "puppeteer": "^1.12.2",
+    "puppeteer": "^1.13.0",
     "redis": "^2.8.0",
     "response-time": "^2.3.2"
   }

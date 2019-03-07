@@ -93,10 +93,15 @@ class BrandsDeviceData {
     if (info[3])
       device_info.storage = await info[3].$eval("span", node => node.innerText);
 
-    let comment = await this.page.$eval(
-      'p[data-spec="comment"]',
-      node => node.innerText
-    );
+    let comment;
+    let is_comment_there = await this.page.$('p[data-spec="comment"]');
+    if (is_comment_there) {
+      comment = await this.page.$eval(
+        'p[data-spec="comment"]',
+        node => node.innerText
+      );
+    }
+
     device_info.comment = comment || "";
     let urls = await this.page.$$eval("ul.article-info-meta > li > a", nodes =>
       nodes.map(node => {

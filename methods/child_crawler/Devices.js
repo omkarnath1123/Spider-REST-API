@@ -44,7 +44,29 @@ class BrandsDevices {
 
   async getJSON() {
     let all_devices = [];
-    await this.page.waitForSelector(".nav-pages > a");
+    try {
+      await this.page.waitForSelector(".nav-pages > a");
+    } catch (error) {
+      let devices = await this.page.$$(".makers > ul > li");
+      for (let i = 0; i < devices.length; i++) {
+        let device = {};
+        device.product_page_link = await devices[i].$eval(
+          "a",
+          node => node.href
+        );
+        device.product_image = await devices[i].$eval(
+          "a > img",
+          node => node.src
+        );
+        device.desc = await devices[i].$eval("a > img", node => node.title);
+        device.product_name = await devices[i].$eval(
+          "a",
+          node => node.innerText
+        );
+        all_devices.push(device);
+      }
+      return all_devices;
+    }
     // REVIEW check why process.env.PAGE_BASE_URL ? undefined
     let pages_links = await this.page.$$eval(".nav-pages > a", nodes =>
       nodes.map(node => {

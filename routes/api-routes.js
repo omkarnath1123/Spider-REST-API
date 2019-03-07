@@ -153,11 +153,13 @@ async function readBrands(req, res, next) {
           if (error || !result) {
             console.log(`Adding ${hash_string} to Redis`);
             // REVIEW add callback as fourth parameter
+            // NOTE cache value till 1hour and don't cache value for empty response
             client.set(hash_string, JSON.stringify(response), "EX", 3600 * 1);
             resolve(true);
           } else {
             console.log(`${hash_string} is already in Redis : ${result}`);
             console.log("UPDATING the current Redis value");
+            // NOTE cache value till 1hour and don't cache value for empty response
             client.set(hash_string, JSON.stringify(response), "EX", 3600 * 1);
             resolve(true);
           }
@@ -312,6 +314,7 @@ router.delete("/:method/", [printRequest]);
 // TODO add LATEST DEVICES and IN STORES NOW in put
 router.put("/:method/", [printRequest]);
 
+// FIXME throws error The "list[0]" argument must be one of type Array, Buffer, or Uint8Array. Received type string
 router.use(function(req, res, next) {
   if (!req.route) return next(new Error("404"));
   return next();
