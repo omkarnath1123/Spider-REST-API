@@ -63,6 +63,7 @@ class BrandsDevices {
           "a",
           node => node.innerText
         );
+        device.product_name = device.product_name.replace(/\//g, " ");
         all_devices.push(device);
       }
       return all_devices;

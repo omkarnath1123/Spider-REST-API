@@ -315,8 +315,16 @@ router.delete("/:method/", [printRequest]);
 router.put("/:method/", [printRequest]);
 
 // FIXME throws error The "list[0]" argument must be one of type Array, Buffer, or Uint8Array. Received type string
-router.use(function(req, res, next) {
-  if (!req.route) return next(new Error("404"));
+router.use(async function(req, res, next) {
+  if (!req.route) {
+    // return next(new Error("404"));
+    res.header("Content-Type", "application/json");
+    let results = {
+      success: false,
+      response: "{ UNKNOWN URI } Please hit a valid URI"
+    };
+    await res.send(JSON.stringify(results, null, 4));
+  }
   return next();
 });
 
