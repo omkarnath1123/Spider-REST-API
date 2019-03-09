@@ -1,8 +1,12 @@
 # Spider-REST-API
 
-<b>SPIDER is an open source REST API.</b> Under the hood when we hit a request it throw data which is stored in database and also start fetching the latest and greatest gadgets information so, you will always stay updated about your favourate gadgets information. <br>
-It takes :iphone: :watch: <b>Brand/s</b> or <b>Devices/s</b> and get latest crawled device data, update database and return a detailed description of that Brand/s or Device/s.
+<b>SPIDER is an open source REST API.</b> Under the hood when a user hit a request it throw data which is stored in database and also start fetching the latest and greatest gadgets information so, you will always stay updated about your favourate gadgets information. <br>
+In the nutshell it uses _authentication_, _caching_, _encryption_ and _server crash reports_.
+<br>
 
+It takes :iphone: <b>Company/Companies</b> or <b>Device/Devices</b> and get latest subject data, update database and return a detailed description of that Company/Companies or Device/Devices.
+
+Give it a try !! just follow these symple steps :hammer: -
 > To setup and types of request please go to the [Wiki](https://github.com/omkarnath1123/Spider-REST-API/wiki) page.
 
 <img src="Examples/curl_get.png" alt="SPIDER curl get request" />
