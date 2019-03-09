@@ -6,6 +6,177 @@ const redis = require("./redis.connection");
 const client = redis.client;
 const path = require("path");
 const ROOT_DIR = path.dirname(__dirname);
+const mongoose = require("mongoose");
+const Users = mongoose.model("Users");
+const Cryptr = require("cryptr");
+const cryptr = new Cryptr(process.env.PRIVATE_KEY || "secret");
+
+// NOTE get current hour
+let getCurretHours = () => {
+  return Number(
+    (new Date().getTime() / (1000 * 60 * 60)).toString().split(".")[0]
+  );
+};
+
+// NOTE catch statement for server error
+async function catchServerError(req, res, next, error) {
+  console.error(error);
+  console.log(error.stack);
+  res.header("Content-Type", "application/json");
+  let results = {
+    success: false,
+    message: `Server Crashed contact your network administrator : ${error}`,
+    stack: error.stack
+  };
+  await res.status(500).send(JSON.stringify(results, null, 4));
+}
+
+async function newUser(req, res, next) {
+  try {
+    const { user_name, email, user_level, password } = req.body;
+    res.header("Content-Type", "application/json");
+    if (!user_name || !password) {
+      let results = {
+        errors: {
+          user_name: "User Name is required",
+          password: "Password is required"
+        }
+      };
+      await res.status(422).send(JSON.stringify(results, null, 4));
+      return;
+    }
+    let isCustomer = await Users.findOne({ user_name: user_name });
+    if (isCustomer) {
+      let results = {
+        errors: {
+          auth: false,
+          message: "This User Name is already used. Select a new user name"
+        }
+      };
+      await res.status(401).send(JSON.stringify(results, null, 4));
+      return;
+    }
+    let key = crypto.randomBytes(16).toString("hex");
+    let hash = crypto
+      .pbkdf2Sync(password, key, 10000, 32, "sha512")
+      .toString("hex");
+    let new_user = await new Users({
+      user_name: user_name,
+      key: key,
+      hash: hash,
+      email: email,
+      user_level: user_level || "USER"
+    });
+    await new_user.save();
+    let results = {
+      success: true,
+      message: "New user is created successfully"
+    };
+    await res.status(200).send(JSON.stringify(results, null, 4));
+  } catch (error) {
+    await catchServerError(req, res, next, error);
+    return;
+  }
+  return;
+}
+
+// NOTE POST new user user sign up route (optional, everyone has access)
+router.post("/API/new_user", [printRequest, newUser]);
+
+async function userLoginAndTokenLogin(req, res, next) {
+  try {
+    const { user_name, email, user_level, password } = req.body;
+    const { authorization } = req.headers;
+    res.header("Content-Type", "application/json");
+    if (authorization) {
+      try {
+        let data = cryptr.decrypt(authorization);
+        data = JSON.parse(data);
+        const { user_name, hours, password } = data;
+        let isValid = await Users.findOne({ user_name: user_name });
+        if (isValid) {
+          if (hours !== getCurretHours()) {
+            let results = {
+              errors: {
+                auth: false,
+                message: "Your token has expired .Please login again."
+              }
+            };
+            await res.status(401).send(JSON.stringify(results, null, 4));
+            return;
+          }
+          let results = {
+            auth: true,
+            user_name: isValid.user_name,
+            message: "Welcome! Now you are Logged In."
+          };
+          await res.status(200).send(JSON.stringify(results, null, 4));
+          return;
+        }
+        let results = {
+          errors: {
+            auth: false,
+            message: "Invalid token. Please login again."
+          }
+        };
+        await res.status(401).send(JSON.stringify(results, null, 4));
+        return;
+      } catch (error) {
+        let results = {
+          errors: {
+            auth: false,
+            message: "Invalid token. Please login again."
+          }
+        };
+        await res.status(401).send(JSON.stringify(results, null, 4));
+        return;
+      }
+    }
+    if (!user_name || !password) {
+      let results = {
+        errors: {
+          user_name: "User Name is required.",
+          password: "Password is required."
+        }
+      };
+      await res.status(422).send(JSON.stringify(results, null, 4));
+      return;
+    }
+    let isCustomer = await Users.findOne({ user_name: user_name });
+    if (isCustomer) {
+      let pass = crypto
+        .pbkdf2Sync(password, isCustomer.key, 10000, 32, "sha512")
+        .toString("hex");
+      if (pass !== isCustomer.hash) {
+        let results = {
+          errors: {
+            user_name: "User Name is not correct.",
+            password: "Password is not correct."
+          }
+        };
+        await res.status(401).send(JSON.stringify(results, null, 4));
+        return;
+      }
+      let obj = {
+        user_name: isCustomer.user_name,
+        password: pass,
+        hours: getCurretHours()
+      };
+      let results = {
+        loggedIn: true,
+        token: cryptr.encrypt(JSON.stringify(obj))
+      };
+      await res.status(401).send(JSON.stringify(results, null, 4));
+    }
+  } catch (error) {
+    await catchServerError(req, res, next, error);
+    return;
+  }
+  return;
+}
+
+//NOTE POST login route (optional, everyone has access)
+router.post("/API/login/", [printRequest, userLoginAndTokenLogin]);
 
 // TODO add nodemon -save to restart server automatically
 // TODO add Authentication Later after release v1.0.1
@@ -72,6 +243,12 @@ async function showRequestParams(req, res, next) {
   req.body.method = req.params.method; // method => Brands : return [] // method => Devices: return []
   req.body.company = req.params.company; // company => Brand::company : return []
   req.body.model = req.params.model; // Device::model : return []
+  req.body.company = req.body.company
+    ? req.body.company.replace(/%20/g, " ")
+    : req.body.company;
+  req.body.model = req.body.model
+    ? req.body.model.replace(/%20/g, " ")
+    : req.body.model;
   if (
     (req.params.method === "Brand" && !req.params.company) ||
     (req.params.method === "Device" && !req.params.company) ||
@@ -172,15 +349,7 @@ async function readBrands(req, res, next) {
       }, 20000);
     });
   } catch (error) {
-    console.error(error);
-    console.log(error.stack);
-    res.header("Content-Type", "application/json");
-    let results = {
-      success: false,
-      message: `Server Crashed contact your network administrator : ${error}`,
-      stack: error.stack
-    };
-    await res.send(JSON.stringify(results, null, 4));
+    await catchServerError(req, res, next, error);
     return;
   }
   return next();
@@ -204,17 +373,9 @@ async function crawlBrands(req, res, next) {
     // res.header("Content-Type", "application/json");
     // let results = {success: false,response: response};
     // await res.send(JSON.stringify(results, null, 4));
-    return next();
   } catch (error) {
-    console.error(error);
-    console.log(error.stack);
-    res.header("Content-Type", "application/json");
-    let results = {
-      success: false,
-      message: `Server Crashed contact your network administrator : ${error}`,
-      stack: error.stack
-    };
-    await res.send(JSON.stringify(results, null, 4));
+    await catchServerError(req, res, next, error);
+    return;
   }
   return next();
 }
@@ -263,15 +424,7 @@ async function readDailyIntrest(req, res, next) {
     let results = { success: true, response: response };
     await res.send(JSON.stringify(results, null, 4));
   } catch (error) {
-    console.error(error);
-    console.log(error.stack);
-    res.header("Content-Type", "application/json");
-    let results = {
-      success: false,
-      message: `Server Crashed contact your network administrator : ${error}`,
-      stack: error.stack
-    };
-    await res.send(JSON.stringify(results, null, 4));
+    await catchServerError(req, res, next, error);
     return;
   }
   return next();
@@ -287,15 +440,7 @@ async function getDailyIntrest(req, res, next) {
     // let results = { success: true, response: response };
     // await res.send(JSON.stringify(results, null, 4));
   } catch (error) {
-    console.error(error);
-    console.log(error.stack);
-    res.header("Content-Type", "application/json");
-    let results = {
-      success: false,
-      message: `Server Crashed contact your network administrator : ${error}`,
-      stack: error.stack
-    };
-    await res.send(JSON.stringify(results, null, 4));
+    await catchServerError(req, res, next, error);
     return;
   }
   return next();
@@ -314,10 +459,8 @@ router.delete("/:method/", [printRequest]);
 // TODO add LATEST DEVICES and IN STORES NOW in put
 router.put("/:method/", [printRequest]);
 
-// FIXME throws error The "list[0]" argument must be one of type Array, Buffer, or Uint8Array. Received type string
 router.use(async function(req, res, next) {
   if (!req.route) {
-    // return next(new Error("404"));
     res.header("Content-Type", "application/json");
     let results = {
       success: false,

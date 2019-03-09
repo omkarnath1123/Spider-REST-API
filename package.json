@@ -23,6 +23,7 @@
     "axios": "^0.18.0",
     "body-parser": "^1.18.3",
     "crypto": "^1.0.1",
+    "cryptr": "^4.0.2",
     "express": "^4.16.4",
     "fs": "0.0.1-security",
     "mongoose": "^5.4.17",

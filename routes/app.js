@@ -2,6 +2,7 @@
 
 const fs = require("fs");
 require("./mongoose.connection");
+require('../models/Users');
 let express = require("express");
 require("./redis.connection");
 const responseTime = require("response-time");
