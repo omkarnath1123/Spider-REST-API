@@ -52,6 +52,14 @@ async function process() {
   //   );
   //   await wait(15000);
   // }
+
+  // jshint
+  await doAxios("https://spider-rest-api.herokuapp.com/Brands");
+  await doAxios("https://spider-rest-api.herokuapp.com/Brand/SAMSUNG");
+  await doAxios("https://spider-rest-api.herokuapp.com/Devices/SAMSUNG");
+  await doAxios(
+    "https://spider-rest-api.herokuapp.com/Device/SAMSUNG/Galaxy%20Fold"
+  );
 }
 
 process();
