@@ -156,7 +156,7 @@ class BrandsDeviceData {
       product_name: this.context.model
     });
     await Devices.findOneAndUpdate(
-      { product_name: this.context.model },
+      { company: this.context.company, product_name: this.context.model },
       {
         review: review,
         release_date: devices.release_date,

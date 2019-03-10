@@ -125,7 +125,7 @@ class BrandsDevices {
         product_name: Brands[i].product_name
       });
       await Devices.findOneAndUpdate(
-        { product_name: Brands[i].product_name },
+        { company: this.context.company, product_name: Brands[i].product_name },
         {
           attempt: (device && device.attempt + 1) || 1,
           status: "CRAWLED",

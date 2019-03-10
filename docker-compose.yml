@@ -1,0 +1,10 @@
+version: '2.1'
+
+services:
+  spider-rest-api:
+    image: spider-rest-api
+    build: .
+    environment:
+      NODE_ENV: production
+    ports:
+      - 5000:5000

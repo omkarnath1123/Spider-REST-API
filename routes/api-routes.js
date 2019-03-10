@@ -179,7 +179,7 @@ async function userLoginAndTokenLogin(req, res, next) {
 router.post("/API/login/", [printRequest, userLoginAndTokenLogin]);
 
 // TODO add nodemon -save to restart server automatically
-// TODO add Authentication Later after release v1.0.1
+// TODO add Authentication Later after release v1.1
 /*
 TODO Types of users
 1. administrator => read , write , delete
@@ -452,12 +452,28 @@ router.patch("/Device/DAILY%20INTEREST", [
   getDailyIntrest
 ]);
 
+async function updateNewDevices(req, res, next) {
+  try {
+    res.header("Content-Type", "application/json");
+    let results = {
+      success: true,
+      response: "All latest devices will be updated soon."
+    };
+    await res.send(JSON.stringify(results, null, 4));
+    await Master_Operator[crawler_methods.updateDevices](req.body);
+  } catch (error) {
+    await catchServerError(req, res, next, error);
+    return;
+  }
+  return next();
+}
+
+// TODO add LATEST DEVICES and IN STORES NOW in put
+router.put("/UPDATE/", [printRequest, updateNewDevices]);
+
 // TODO  implement others
 // TODO delete brands and devices from data
 router.delete("/:method/", [printRequest]);
-
-// TODO add LATEST DEVICES and IN STORES NOW in put
-router.put("/:method/", [printRequest]);
 
 router.use(async function(req, res, next) {
   if (!req.route) {

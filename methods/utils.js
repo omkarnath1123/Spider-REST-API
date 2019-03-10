@@ -3,7 +3,8 @@ const crawler_methods = {
   Brands: "crawlAllBrands",
   Devices: "crawlAllBrandsDevices",
   Device: "crawlDeviceData",
-  DailyIntrest: "crawlDailyIntrest"
+  DailyIntrest: "crawlDailyIntrest",
+  updateDevices: "crawlNewDevices"
 };
 const mongo_methods = {
   Brand: "getAllBrands",

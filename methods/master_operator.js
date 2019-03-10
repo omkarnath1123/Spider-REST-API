@@ -140,6 +140,14 @@ class Master_Operator {
     })();
   }
 
+  // ANCHOR crawl and update new devices data
+  static crawlNewDevices(request) {
+    return (async () => {
+      const Crawler = require(`./child_crawler/NewDevices`);
+      return new Crawler(request).header();
+    })();
+  }
+
   // Todo : add Deletion item from collection
 }
 
@@ -151,5 +159,6 @@ module.exports = {
   getDeviceData: Master_Operator.getDeviceData,
   crawlDeviceData: Master_Operator.crawlDeviceData,
   crawlDailyIntrest: Master_Operator.crawlDailyIntrest,
-  getDailyIntrest: Master_Operator.getDailyIntrest
+  getDailyIntrest: Master_Operator.getDailyIntrest,
+  crawlNewDevices: Master_Operator.crawlNewDevices
 };

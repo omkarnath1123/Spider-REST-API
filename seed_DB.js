@@ -64,6 +64,11 @@ async function process() {
 
 process();
 
+module.exports = {
+  wait: wait,
+  doAxios: doAxios
+};
+
 /*
 Sun Mar 03 21:06:02 IST 2019:  [JSON] :
 An error occurred while writing to target database

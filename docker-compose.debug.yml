@@ -1,0 +1,12 @@
+version: '2.1'
+
+services:
+  spider-rest-api:
+    image: spider-rest-api
+    build: .
+    environment:
+      NODE_ENV: development
+    ports:
+      - 5000:5000
+      - 9229:9229
+    command: node --inspect=0.0.0.0:9229 routes/app.js
