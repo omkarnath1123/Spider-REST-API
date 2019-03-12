@@ -468,12 +468,68 @@ async function updateNewDevices(req, res, next) {
   return next();
 }
 
-// TODO add LATEST DEVICES and IN STORES NOW in put
+// add LATEST DEVICES and IN STORES NOW in put
 router.put("/UPDATE/", [printRequest, updateNewDevices]);
 
+// delete brands and devices from data
+router.delete("/REMOVE/:company/:device/", [printRequest, removeDevice]);
+
+async function removeDevice(req, res, next) {
+  try {
+    if (req.params.company && req.params.device) {
+      req.body.company = req.params.company;
+      req.body.device = req.params.device;
+    } else {
+      res.header("Content-Type", "application/json");
+      let results = {
+        success: false,
+        message: "{ UNKNOWN URI } please hit correct api URI"
+      };
+      await res.send(JSON.stringify(results, null, 4));
+      return;
+    }
+    let response = await Master_Operator[mongo_methods.removeDevice](req.body);
+    res.header("Content-Type", "application/json");
+    let results;
+    if (response.stack) {
+      results = {
+        success: false,
+        message: response.message,
+        stack: response.stack
+      };
+    } else {
+      results = {
+        success: true,
+        response: response.message
+      };
+    }
+    await res.send(JSON.stringify(results, null, 4));
+  } catch (error) {
+    await catchServerError(req, res, next, error);
+    return;
+  }
+  return next();
+}
+
 // TODO  implement others
-// TODO delete brands and devices from data
-router.delete("/:method/", [printRequest]);
+// TODO insert specs of those devices whose link and name is present but secs is not present
+router.put("/INCOMPLETE_DATA/", [printRequest, updateIncompleteDevices]);
+
+async function updateIncompleteDevices() {
+  try {
+    res.header("Content-Type", "application/json");
+    let results = {
+      success: true,
+      response: "All un-updated devices will be updated soon."
+    };
+    await res.send(JSON.stringify(results, null, 4));
+    await Master_Operator[crawler_methods.incompleteDevices](req.body);
+  } catch (error) {
+    await catchServerError(req, res, next, error);
+    return;
+  }
+  return next();
+}
 
 router.use(async function(req, res, next) {
   if (!req.route) {

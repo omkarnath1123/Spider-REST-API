@@ -148,6 +148,22 @@ class Master_Operator {
     })();
   }
 
+  // ANCHOR to delete device data from DB
+  static removeDeviceData(request) {
+    return (async () => {
+      const Mongo = require("./mongo_methods/removeDevices");
+      return new Mongo(request).header();
+    })();
+  }
+
+  // ANCHOR crawl remaining unscraped device data
+  static crawlUnscrapedDevices(request) {
+    return (async () => {
+      const Crawler = require("./child_crawler/unscrapedDevices");
+      return new Crawler(request).header();
+    })();
+  }
+
   // Todo : add Deletion item from collection
 }
 
@@ -160,5 +176,6 @@ module.exports = {
   crawlDeviceData: Master_Operator.crawlDeviceData,
   crawlDailyIntrest: Master_Operator.crawlDailyIntrest,
   getDailyIntrest: Master_Operator.getDailyIntrest,
-  crawlNewDevices: Master_Operator.crawlNewDevices
+  crawlNewDevices: Master_Operator.crawlNewDevices,
+  removeDeviceData: Master_Operator.removeDeviceData
 };

@@ -11,6 +11,7 @@ const mongo_methods = {
   Brands: "getAllBrands",
   Devices: "getAllBrandsDevices",
   Device: "getDeviceData",
-  DailyIntrest: "getDailyIntrest"
+  DailyIntrest: "getDailyIntrest",
+  removeDevice: "removeDeviceData"
 };
 module.exports = { crawler_methods, mongo_methods };
