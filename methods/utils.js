@@ -4,7 +4,8 @@ const crawler_methods = {
   Devices: "crawlAllBrandsDevices",
   Device: "crawlDeviceData",
   DailyIntrest: "crawlDailyIntrest",
-  updateDevices: "crawlNewDevices"
+  updateDevices: "crawlNewDevices",
+  incompleteDevices: "crawlIncompleteDevices"
 };
 const mongo_methods = {
   Brand: "getAllBrands",

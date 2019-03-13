@@ -167,6 +167,15 @@ async function userLoginAndTokenLogin(req, res, next) {
         token: cryptr.encrypt(JSON.stringify(obj))
       };
       await res.status(401).send(JSON.stringify(results, null, 4));
+    } else {
+      let results = {
+        errors: {
+          success: false,
+          message: "Invalid user name. Please Sign up."
+        }
+      };
+      await res.status(401).send(JSON.stringify(results, null, 4));
+      return;
     }
   } catch (error) {
     await catchServerError(req, res, next, error);
@@ -511,11 +520,10 @@ async function removeDevice(req, res, next) {
   return next();
 }
 
-// TODO  implement others
-// TODO insert specs of those devices whose link and name is present but secs is not present
+// insert specs of those devices whose link and name is present but secs is not present
 router.put("/INCOMPLETE_DATA/", [printRequest, updateIncompleteDevices]);
 
-async function updateIncompleteDevices() {
+async function updateIncompleteDevices(req, res, next) {
   try {
     res.header("Content-Type", "application/json");
     let results = {
