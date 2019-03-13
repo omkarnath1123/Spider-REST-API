@@ -2,11 +2,10 @@
 
 const Puppeteer = require("../../core/puppeteer");
 const CrawledDevices = require("../../models/Devices");
-const Company = require("../../models/Brands");
 const { wait } = require("../../seed_DB");
 let axios = require("axios");
 
-class crawlNewDevices {
+class crawlUncrawledDevices {
   constructor(context) {
     this.context = context;
     this.url = process.env.PAGE_BASE_URL;
@@ -63,4 +62,4 @@ class crawlNewDevices {
   }
 }
 
-module.exports = crawlNewDevices;
+module.exports = crawlUncrawledDevices;

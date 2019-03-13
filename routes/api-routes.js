@@ -244,6 +244,73 @@ let methods = ["Brand", "Brands", "Device", "Devices"];
 // Devices: return [] { "company" : "XYZ" } DONE
 // Device::model : return [] { "company" : "XYZ" } DONE
 
+let checkIsJson = function(str) {
+  try {
+    var json = JSON.parse(str);
+    return typeof json === "object";
+  } catch (e) {
+    return false;
+  }
+};
+
+async function validateToken(req, res, next) {
+  try {
+    const { authorization } = req.headers;
+    if (!authorization) {
+      res.header("Content-Type", "application/json");
+      let results = {
+        errors: {
+          auth: false,
+          message:
+            "AUTH TOKEN is mendatory for api request. Please login again."
+        }
+      };
+      await res.status(401).send(JSON.stringify(results, null, 4));
+      return;
+    }
+    let data = cryptr.decrypt(authorization);
+    let check = checkIsJson(data);
+    if (!check) {
+      res.header("Content-Type", "application/json");
+      let results = {
+        errors: {
+          auth: false,
+          message: "Invalid token. Please login again."
+        }
+      };
+      await res.status(401).send(JSON.stringify(results, null, 4));
+      return;
+    }
+    data = JSON.parse(data);
+    const { user_name, hours, password } = data;
+    let isValid = await Users.findOne({ user_name: user_name });
+    if (isValid) {
+      if (hours !== getCurretHours()) {
+        let results = {
+          errors: {
+            auth: false,
+            message: "Your token has expired .Please login again."
+          }
+        };
+        await res.status(401).send(JSON.stringify(results, null, 4));
+        return;
+      }
+      console.log(`THIS TOKEN IS VALID | ${authorization}`);
+    }
+  } catch (error) {
+    res.header("Content-Type", "application/json");
+    let results = {
+      errors: {
+        auth: false,
+        message: "Invalid token. Please login again."
+      }
+    };
+    await res.status(401).send(JSON.stringify(results, null, 4));
+    return;
+  }
+  return next();
+}
+
 async function showRequestParams(req, res, next) {
   console.log("Request created at : " + new Date());
   console.log("Request URL :" + req.originalUrl);
@@ -402,7 +469,7 @@ router.get(
     "/:method/:model/",
     "/:method/:company/:model/"
   ],
-  [showRequestParams, readBrands]
+  [validateToken, showRequestParams, readBrands]
 );
 
 // TODO post method is only accessible to developer and admin
@@ -413,7 +480,7 @@ router.post(
     "/:method/:model/",
     "/:method/:company/:model/"
   ],
-  [showRequestParams, readBrands, crawlBrands]
+  [validateToken, showRequestParams, readBrands, crawlBrands]
 );
 
 // PUT,PATCH and DELETE methods are idempotent { and res should be implemented in that way }
@@ -456,6 +523,7 @@ async function getDailyIntrest(req, res, next) {
 }
 
 router.patch("/Device/DAILY%20INTEREST", [
+  validateToken,
   printRequest,
   readDailyIntrest,
   getDailyIntrest
@@ -478,10 +546,14 @@ async function updateNewDevices(req, res, next) {
 }
 
 // add LATEST DEVICES and IN STORES NOW in put
-router.put("/UPDATE/", [printRequest, updateNewDevices]);
+router.put("/UPDATE/", [validateToken, printRequest, updateNewDevices]);
 
 // delete brands and devices from data
-router.delete("/REMOVE/:company/:device/", [printRequest, removeDevice]);
+router.delete("/REMOVE/:company/:device/", [
+  validateToken,
+  printRequest,
+  removeDevice
+]);
 
 async function removeDevice(req, res, next) {
   try {
@@ -521,7 +593,11 @@ async function removeDevice(req, res, next) {
 }
 
 // insert specs of those devices whose link and name is present but secs is not present
-router.put("/INCOMPLETE_DATA/", [printRequest, updateIncompleteDevices]);
+router.put("/INCOMPLETE_DATA/", [
+  validateToken,
+  printRequest,
+  updateIncompleteDevices
+]);
 
 async function updateIncompleteDevices(req, res, next) {
   try {
