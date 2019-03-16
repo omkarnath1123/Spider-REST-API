@@ -2,9 +2,14 @@
   "name": "spider",
   "version": "1.0.0",
   "description": "",
+  "private": true,
   "main": "routes/app.js",
   "scripts": {
-    "test": "node seed_DB.js"
+    "start": "react-scripts start",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject",
+    "server": "node routes/app.js"
   },
   "engines": {
     "node": "10.9.0"
@@ -28,9 +33,28 @@
     "fs": "0.0.1-security",
     "mongoose": "^5.4.18",
     "path": "^0.12.7",
+    "plotly": "^1.0.6",
     "prettier": "^1.16.4",
     "puppeteer": "^1.13.0",
     "redis": "^2.8.0",
-    "response-time": "^2.3.2"
-  }
+    "response-time": "^2.3.2",
+    "react": "^16.8.4",
+    "react-dom": "^16.8.4",
+    "react-scripts": "2.1.8"
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.0",
+    "nodemon": "^1.18.10"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": [
+    ">0.2%",
+    "not dead",
+    "not ie <= 11",
+    "not op_mini all"
+  ],
+  "proxy_dev": "http://localhost:5000/",
+  "proxy_prod": "https://spider-rest-api.herokuapp.com/"
 }

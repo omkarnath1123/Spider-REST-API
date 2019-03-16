@@ -5,9 +5,37 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "type": "chrome",
+      "request": "attach",
+      "name": "Launch Chrome",
+      "preLaunchTask": "npm: start",
+      "url": "http://localhost:3000",
+      // "port": 3000,
+      "webRoot": "${workspaceFolder}/src",
+      "internalConsoleOptions": "openOnSessionStart",
+      "showAsyncStacks": true,
+      "timeout": 10000,
+      "trace": true
+    },
+    // {
+    //   "type": "node",
+    //   "request": "launch",
+    //   "name": "Launch Client",
+    //   "program": "${workspaceFolder}/routes/test.js",
+    //   "env": {
+    //     "NODE_ENV": "development"
+    //   },
+    //   "console": "internalConsole",
+    //   "internalConsoleOptions": "openOnSessionStart",
+    //   "cwd": "${workspaceFolder}",
+    //   "showAsyncStacks": true,
+    //   "timeout": 10000,
+    //   "trace": true
+    // },
+    {
       "type": "node",
       "request": "launch",
-      "name": "Launch Program",
+      "name": "Launch Server",
       "program": "${workspaceFolder}/routes/app.js",
       "env": {
         "TEST": "production",
@@ -16,7 +44,7 @@
         "PORT": "5000",
         "PAGE_BASE_URL": "https://www.gsmarena.com/",
         "RESET_LOGS": "false",
-        "PRIVATE_KEY": "5c803048150805735405a785", // strong key to create token
+        "PRIVATE_KEY": "5c803048150805735405a785" // strong key to create token
         // use admin to call delete request
         // "MONGODB_AUTH": "mongodb+srv://developer:developerAtMongo@cluster0-l9wqt.mongodb.net/MobileArena?retryWrites=true",
         // "REDIS_PORT" : "17285",
@@ -29,6 +57,12 @@
       "showAsyncStacks": true,
       "timeout": 10000,
       "trace": true
+    }
+  ],
+  "compounds": [
+    {
+      "name": "Server/Client",
+      "configurations": ["Launch Server", "Launch Chrome"]
     }
   ]
 }
