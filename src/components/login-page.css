@@ -1,0 +1,183 @@
+@import url(http://weloveiconfonts.com/api/?family=entypo|zocial);
+[class*="entypo-"]:before {
+  font-family: "entypo", sans-serif;
+}
+
+[class*="zocial-"]:before {
+  font-family: "zocial", sans-serif;
+}
+
+.container:after,
+.login-form .username:after,
+.login-form .password:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+.login-wrapper,
+.login-form {
+  /* Center elements */
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  -webkit-transform: translate(-50%, -50%);
+  transform: translate(-50%, -50%);
+}
+
+.login-form .username input:focus,
+.login-form .password input:focus,
+.login-form .btn:focus,
+.login-form a:focus {
+  outline: lime solid thin;
+}
+
+.login-wrapper,
+.login-form .btn,
+.login-form a {
+  transition: all 0.5s ease;
+}
+
+*,
+*:before,
+*:after {
+  box-sizing: border-box;
+}
+
+body {
+  font-size: 1em;
+  line-height: 1.4;
+  background: #1f2226;
+}
+
+.container {
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.login-wrapper {
+  width: 320px;
+  height: 320px;
+  background-image: url("https://db.tt/ShQdt1wH");
+  background-position: center center;
+  background-size: cover;
+}
+@media (min-width: 484px) {
+  .login-wrapper {
+    width: 484px;
+    height: 484px;
+  }
+}
+
+.login-form {
+  z-index: 1;
+  width: 100%;
+  max-width: 380px;
+  width: 100%;
+  padding: 0 20px;
+}
+.login-form .password {
+  margin-top: 20px;
+}
+.login-form .username label,
+.login-form .password label {
+  float: left;
+  display: block;
+  width: 15%;
+  height: 55px;
+  text-align: center;
+}
+.login-form .username label span,
+.login-form .password label span {
+  line-height: 55px;
+  vertical-align: middle;
+}
+.login-form .username input,
+.login-form .password input {
+  float: right;
+  display: block;
+  width: 85%;
+  height: 55px;
+  padding: 15px 20px;
+}
+.login-form .btn {
+  width: 100%;
+  height: 55px;
+  margin: 26px 0 20px;
+}
+.login-form p span {
+  padding-left: 5px;
+}
+@media (min-width: 380px) {
+  .login-form {
+    padding: 0;
+  }
+}
+
+.login-form .username label,
+.login-form .password label {
+  border-top-left-radius: 4px;
+  border-bottom-left-radius: 4px;
+  background-color: #363b41;
+  background-color: rgba(54, 59, 65, 0.8);
+}
+.login-form .username label span,
+.login-form .password label span {
+  font-size: 28px;
+  color: #606468;
+}
+.login-form .username input,
+.login-form .password input {
+  border: none;
+  border-top-right-radius: 4px;
+  border-bottom-right-radius: 4px;
+  background-color: #3b4148;
+  background-color: rgba(59, 65, 72, 0.8);
+  color: white;
+}
+.login-form .username input::-webkit-input-placeholder,
+.login-form .password input::-webkit-input-placeholder {
+  color: #787e83;
+}
+.login-form .username input:-ms-input-placeholder,
+.login-form .password input:-ms-input-placeholder {
+  color: #787e83;
+}
+.login-form .username input::-ms-input-placeholder,
+.login-form .password input::-ms-input-placeholder {
+  color: #787e83;
+}
+.login-form .username input::placeholder,
+.login-form .password input::placeholder {
+  color: #787e83;
+}
+.login-form .btn {
+  cursor: pointer;
+  font-size: 20px;
+  font-weight: 400;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  border: none;
+  border-radius: 4px;
+  background-color: #232f99;
+  background-color: rgba(37, 69, 173, 0.8);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
+  color: white;
+}
+.login-form .btn:hover {
+  background-color: #2330e7;
+  background-color: rgba(40, 43, 243, 0.9);
+}
+.login-form a {
+  font-weight: 300;
+  text-decoration: none;
+  color: white;
+}
+.login-form a:hover {
+  color: gray;
+}
+.login-form p {
+  margin: 0;
+  text-align: center;
+  color: #606469;
+}

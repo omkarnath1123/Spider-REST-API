@@ -9,7 +9,8 @@
     "build": "react-scripts build",
     "test": "react-scripts test",
     "eject": "react-scripts eject",
-    "server": "node routes/app.js"
+    "server": "node routes/app.js",
+    "dev": "concurrently \" npm run server\" \" npm start \""
   },
   "engines": {
     "node": "10.9.0"
