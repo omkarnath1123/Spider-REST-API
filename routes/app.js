@@ -2,7 +2,7 @@
 
 const fs = require("fs");
 require("./mongoose.connection");
-require('../models/Users');
+require("../models/Users");
 let express = require("express");
 require("./redis.connection");
 const responseTime = require("response-time");
@@ -21,6 +21,20 @@ app.use(
     extended: false
   })
 );
+
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
+  if (req.method === "OPTIONS") {
+    req.header("Access-Control-Allow-Methods", "GET, PUT, POST, PATCH, DELETE");
+    return res.status(200).json({});
+  }
+  next();
+});
+
 // NOTE used to see respose time in browsers
 app.use(responseTime());
 app.use("/", require("./api-routes"));

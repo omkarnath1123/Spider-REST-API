@@ -11,6 +11,14 @@ const Users = mongoose.model("Users");
 const Cryptr = require("cryptr");
 const cryptr = new Cryptr(process.env.PRIVATE_KEY || "secret");
 
+// NOTE
+/*
+500 => Internal Server Error
+422 => Unprocessable Entity
+401 => Unauthorized Error
+200 => OK and response
+*/
+
 // NOTE get current hour
 let getCurretHours = () => {
   return Number(
@@ -154,7 +162,7 @@ async function userLoginAndTokenLogin(req, res, next) {
             password: "Password is not correct."
           }
         };
-        await res.status(401).send(JSON.stringify(results, null, 4));
+        await res.status(422).send(JSON.stringify(results, null, 4));
         return;
       }
       let obj = {
@@ -166,7 +174,7 @@ async function userLoginAndTokenLogin(req, res, next) {
         loggedIn: true,
         token: cryptr.encrypt(JSON.stringify(obj))
       };
-      await res.status(401).send(JSON.stringify(results, null, 4));
+      await res.status(200).send(JSON.stringify(results, null, 4));
     } else {
       let results = {
         errors: {
