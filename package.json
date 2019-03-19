@@ -37,11 +37,12 @@
     "plotly": "^1.0.6",
     "prettier": "^1.16.4",
     "puppeteer": "^1.13.0",
-    "redis": "^2.8.0",
-    "response-time": "^2.3.2",
     "react": "^16.8.4",
     "react-dom": "^16.8.4",
-    "react-scripts": "2.1.8"
+    "react-router-dom": "^5.0.0",
+    "react-scripts": "2.1.8",
+    "redis": "^2.8.0",
+    "response-time": "^2.3.2"
   },
   "devDependencies": {
     "concurrently": "^4.1.0",

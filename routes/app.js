@@ -51,26 +51,26 @@ app.listen(port, function() {
 //   res.sendFile((process.env.APP_ROOT_PATH || path.join(__dirname, '/build')) + '/index.html');
 // });
 
-// NOTE reset LOG, WARNING and ERROR .txt
+// NOTE reset LOG, WARNING and ERROR .log
 (function() {
   if (process.env.RESET_LOGS === "true") {
-    if (fs.existsSync(`${LOG_PATH}/log.txt`)) {
-      fs.unlinkSync(`${LOG_PATH}/log.txt`);
+    if (fs.existsSync(`${LOG_PATH}/log.log`)) {
+      fs.unlinkSync(`${LOG_PATH}/log.log`);
     }
-    if (fs.existsSync(`${LOG_PATH}/error.txt`)) {
-      fs.unlinkSync(`${LOG_PATH}/error.txt`);
+    if (fs.existsSync(`${LOG_PATH}/error.log`)) {
+      fs.unlinkSync(`${LOG_PATH}/error.log`);
     }
-    if (fs.existsSync(`${LOG_PATH}/warning.txt`)) {
-      fs.unlinkSync(`${LOG_PATH}/warning.txt`);
+    if (fs.existsSync(`${LOG_PATH}/warning.log`)) {
+      fs.unlinkSync(`${LOG_PATH}/warning.log`);
     }
-    if (!fs.existsSync(`${LOG_PATH}/log.txt`)) {
-      fs.writeFileSync(`${LOG_PATH}/log.txt`);
+    if (!fs.existsSync(`${LOG_PATH}/log.log`)) {
+      fs.writeFileSync(`${LOG_PATH}/log.log`);
     }
-    if (!fs.existsSync(`${LOG_PATH}/error.txt`)) {
-      fs.writeFileSync(`${LOG_PATH}/error.txt`);
+    if (!fs.existsSync(`${LOG_PATH}/error.log`)) {
+      fs.writeFileSync(`${LOG_PATH}/error.log`);
     }
-    if (!fs.existsSync(`${LOG_PATH}/warning.txt`)) {
-      fs.writeFileSync(`${LOG_PATH}/warning.txt`);
+    if (!fs.existsSync(`${LOG_PATH}/warning.log`)) {
+      fs.writeFileSync(`${LOG_PATH}/warning.log`);
     }
   }
 })();
@@ -82,11 +82,11 @@ app.listen(port, function() {
 
   // TODO  create .error automatically and use path library
   console.error = function(errMessage) {
-    if (!fs.existsSync(`${LOG_PATH}/error.txt`)) {
-      fs.writeFileSync(`${LOG_PATH}/error.txt`);
+    if (!fs.existsSync(`${LOG_PATH}/error.log`)) {
+      fs.writeFileSync(`${LOG_PATH}/error.log`);
     }
     fs.appendFileSync(
-      `${LOG_PATH}/error.txt`,
+      `${LOG_PATH}/error.log`,
       new Date() + " : " + errMessage + "\n"
     );
     _error.apply(console, arguments);
@@ -94,21 +94,21 @@ app.listen(port, function() {
 
   // TODO  create .log automatically and use path library
   console.log = function(logMessage) {
-    if (!fs.existsSync(`${LOG_PATH}/log.txt`)) {
-      fs.writeFileSync(`${LOG_PATH}/log.txt`);
+    if (!fs.existsSync(`${LOG_PATH}/log.log`)) {
+      fs.writeFileSync(`${LOG_PATH}/log.log`);
     }
-    const stats = fs.statSync(`${LOG_PATH}/log.txt`);
+    const stats = fs.statSync(`${LOG_PATH}/log.log`);
     const fileSizeInBytes = stats.size;
     const fileSizeInMegabytes = fileSizeInBytes / 1000000.0;
     // NOTE delete file if it exeeds 5mb
     if (fileSizeInMegabytes > 5) {
-      fs.unlink(`${LOG_PATH}/log.txt`, err => {
+      fs.unlink(`${LOG_PATH}/log.log`, err => {
         if (err) throw err;
       });
     }
 
     fs.appendFileSync(
-      `${LOG_PATH}/log.txt`,
+      `${LOG_PATH}/log.log`,
       new Date() + " : " + logMessage + "\n"
     );
     _log.apply(console, arguments);
@@ -116,11 +116,11 @@ app.listen(port, function() {
 
   // TODO  create .warning automatically and use path library
   console.warning = function(warnMessage) {
-    if (!fs.existsSync(`${LOG_PATH}/warning.txt`)) {
-      fs.writeFileSync(`${LOG_PATH}/warning.txt`);
+    if (!fs.existsSync(`${LOG_PATH}/warning.log`)) {
+      fs.writeFileSync(`${LOG_PATH}/warning.log`);
     }
     fs.appendFileSync(
-      `${LOG_PATH}/warning.txt`,
+      `${LOG_PATH}/warning.log`,
       new Date() + " : " + warnMessage + "\n"
     );
     _warning.apply(console, arguments);

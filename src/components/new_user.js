@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import "./login-page.css";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 // FIXME add ENV_PORT to .env in for react
 const ENV_PORT = process.env.ENV_PORT || 5000;
@@ -11,7 +11,9 @@ class Login extends Component {
     this.state = {
       username: "",
       password: "",
-      token: null
+      email_address: "",
+      token: null,
+      isAuthenticated: false
     };
   }
 
@@ -19,7 +21,7 @@ class Login extends Component {
     event.preventDefault();
   };
 
-  validateForm = event => {
+  validateForm = () => {
     return this.state.username !== "" && this.state.password !== "";
   };
 
@@ -33,13 +35,13 @@ class Login extends Component {
     console.log(this.state);
   };
 
-  checkUser = async () => {
+  createUser = async () => {
     // FIXME set api url for production
     let url = `${window.location.protocol +
       "//" +
       window.location.hostname +
       ":" +
-      ENV_PORT}/API/login`;
+      ENV_PORT}/API/new_user`;
     console.log(url);
     let res;
     try {
@@ -49,7 +51,8 @@ class Login extends Component {
         timeout: 30000,
         data: {
           user_name: this.state.username,
-          password: this.state.password
+          password: this.state.password,
+          email_address: this.state.email_address
         }
       });
     } catch (error) {
@@ -57,12 +60,22 @@ class Login extends Component {
       return false;
     }
     console.log(res.data);
-    if (!res.data || (!res.data.loggedIn && !res.data.token)) {
+    if (!res.data || !res.data.success) {
       return false;
     }
-    this.setState({ token: res.data.token });
-    window.localStorage.setItem("token", this.state.token);
     return true;
+  };
+
+  setRedirect = () => {
+    this.setState({
+      isAuthenticated: true
+    });
+  };
+
+  renderRedirect = () => {
+    if (this.state.isAuthenticated) {
+      return <Redirect to="/" />;
+    }
   };
 
   render() {
@@ -73,7 +86,7 @@ class Login extends Component {
           <div className="login-wrapper">
             <form className="login-form" onSubmit={this.handleSubmit}>
               {/* <!-- username -->  */}
-              <div className="username">
+              <div className="username padding_bottom">
                 <label>
                   <span className="entypo-user" />
                 </label>
@@ -82,6 +95,19 @@ class Login extends Component {
                   id="username"
                   placeholder="Username"
                   value={this.state.username}
+                  onChange={this.handleChange}
+                />
+              </div>
+              {/* <!-- email address -->  */}
+              <div className="username">
+                <label>
+                  <span className="entypo-mail" />
+                </label>
+                <input
+                  type="text"
+                  id="email_address"
+                  placeholder="Email"
+                  value={this.state.email_address}
                   onChange={this.handleChange}
                 />
               </div>
@@ -104,17 +130,21 @@ class Login extends Component {
                 disabled={!this.validateForm}
                 onClick={event => {
                   this.printState();
-                  this.checkUser();
+                  let response = this.createUser();
+                  if (response) {
+                    this.setRedirect();
+                  }
                 }}
                 type="submit"
               >
-                Sign in
+                {this.renderRedirect()}
+                Sign Up
               </button>
               <p>
-                Not a member?{" "}
+                Already a member?{" "}
                 <span className="link">
-                  <Link to="/new_user">
-                    Sign up now <span className="entypo-right-thin" />
+                  <Link to="/">
+                    Log in now <span className="entypo-right-thin" />
                   </Link>
                 </span>
               </p>
