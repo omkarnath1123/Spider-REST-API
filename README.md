@@ -1,6 +1,6 @@
 # Spider-REST-API
 
-[![Build Status](https://img.shields.io/badge/build-passing-brightgreen.svg)](http://spider-rest-api.herokuapp.com/Brands)
+[![Deploy](https://www.herokucdn.com/deploy/button.png)](http://spider-rest-api.herokuapp.com/Brands)
 [![npm version](https://badge.fury.io/js/express.svg)](https://badge.fury.io/js/express)
 [![Cocoapods](https://img.shields.io/badge/license-MIT-green.svg)](http://doge.mit-license.org)
 
