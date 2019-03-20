@@ -10,6 +10,19 @@
 In the nutshell it uses _authentication_, _caching_, _encryption_ and _server crash reports_.
 <br>
 
+<!-- Add USES of api -->
+
+##Server Structure
+The spider rest server uses _mongoDb_ as a database, _Redis_ as a caching server, _Express_ handles all the routes of the api, _Puppeteer_ used to get latest data and at last but not the least _Node_ which link all the above and adds functionality like token generation, authentication, token validation, routes validation, encryption etc.
+
+<img src="Examples/Server_Diagram.jpg" alt="Server Structure" />
+
+##Client Site Rendering
+The spider uses client site rendring rendring and technology used are _Redux_ for state management, _GraphQl_ used for front end query language and also used in node to convert query GraphQL to mongoDb query and last but not the least _React_ which is used to create and handle all the UI in form of components.
+
+<img src="Examples/Client.jpg" alt="Server Structure" />
+<br/>
+
 It takes :iphone: <b>Company/Companies</b> or <b>Device/Devices</b> and get latest subject data, update database and return a detailed description of that Company/Companies or Device/Devices.
 
 Give it a try !! just follow these symple steps :hammer: -
