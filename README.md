@@ -74,4 +74,4 @@ Give it a try !! just follow these symple steps :hammer: -
     ]
 }
 ```
-<img src="Examples/curl_get.png" alt="SPIDER curl get request" />
+<img src="Examples/curl.png" alt="SPIDER curl get request" />
