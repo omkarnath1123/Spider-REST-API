@@ -40,11 +40,11 @@ class Login extends Component {
       window.location.hostname +
       ":" +
       ENV_PORT}/API/login`;
-    console.log(url);
-    if (process.env.HEROKU_ENV === "production") {
-      url = "https://spider-client.herokuapp.com/API/login";
-    }
     let res;
+    if (process.env.HEROKU_ENV === "production") {
+      url = "https://spider-rest-api.herokuapp.com/API/login";
+    }
+    console.log(url);
     try {
       res = await axios({
         method: "post",
