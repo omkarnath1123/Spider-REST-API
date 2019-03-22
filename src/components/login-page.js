@@ -41,7 +41,7 @@ class Login extends Component {
       ":" +
       ENV_PORT}/API/login`;
     let res;
-    if (process.env.HEROKU_ENV === "production") {
+    if (process.env.HEROKU_ENV) {
       url = "https://spider-rest-api.herokuapp.com/API/login";
     }
     console.log(url);
