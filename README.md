@@ -3,7 +3,10 @@
 [![npm version](https://badge.fury.io/js/express.svg)](https://badge.fury.io/js/express)
 [![Cocoapods](https://img.shields.io/badge/license-MIT-green.svg)](http://doge.mit-license.org)
 
-[![js-standard-style](https://cdn.rawgit.com/feross/standard/master/badge.svg)](https://github.com/feross/standard)
+[![js-standard-style](Examples/badge.svg)](https://github.com/feross/standard)
+
+<!-- [![trello](Examples/trello.png)](https://trello.com/b/Ac41C6HN/standalone-algorithm-visualizer)
+[![Github-pages](Examples/github_pages.png)](https://omkarnath1123.github.io/Profiler/) -->
 
 <img src="Examples/mern.png" alt="Stack" />
 
