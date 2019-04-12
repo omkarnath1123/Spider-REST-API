@@ -136,12 +136,24 @@ function logResponseBody(req, res, next) {
     chunks.push(chunk);
     oldWrite.apply(res, arguments);
   };
-  // FIXME fix response for favicon.ico
+
+  if (
+    `${req.protocol}://${req.get("host")}${req.originalUrl}`.match(/favicon/i)
+  ) {
+    console.log(
+      `${req.protocol}://${req.get("host")}${
+        req.originalUrl
+      }  : Response Body : Rest API favicon.`
+    );
+    return next();
+  }
   res.end = function(chunk) {
     if (chunk) chunks.push(chunk);
     const body = Buffer.concat(chunks).toString("utf8");
     console.log(
-      `http://localhost:${port}${req.path} : Response Body : ${body}`
+      `${req.protocol}://${req.get("host")}${
+        req.originalUrl
+      }  : Response Body : ${body}`
     );
     oldEnd.apply(res, arguments);
   };
