@@ -28,7 +28,7 @@ The spider rest server uses _mongoDb_ as a database, _Redis_ as a caching server
 
 <img src="Examples/Server_Diagram.jpg" alt="Server Structure" />
 
-## Client Site Rendering
+## Client Side Rendering
 [![Deploy](https://www.herokucdn.com/deploy/button.png)](https://spider-client.herokuapp.com/)
 
 The spider uses client site rendring rendring and technology used are _Redux_ for state management, _GraphQl_ used for front end query language and also used in node to convert query GraphQL to mongoDb query and last but not the least _React_ which is used to create and handle all the UI in form of components.
