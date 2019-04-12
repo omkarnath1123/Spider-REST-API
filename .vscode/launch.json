@@ -17,21 +17,6 @@
       "timeout": 10000,
       "trace": true
     },
-    // {
-    //   "type": "node",
-    //   "request": "launch",
-    //   "name": "Launch Client",
-    //   "program": "${workspaceFolder}/routes/test.js",
-    //   "env": {
-    //     "NODE_ENV": "development"
-    //   },
-    //   "console": "internalConsole",
-    //   "internalConsoleOptions": "openOnSessionStart",
-    //   "cwd": "${workspaceFolder}",
-    //   "showAsyncStacks": true,
-    //   "timeout": 10000,
-    //   "trace": true
-    // },
     {
       "type": "node",
       "request": "launch",
@@ -43,13 +28,13 @@
         "PROXY_URL": "https://www.socks-proxy.net/",
         "PORT": "5000",
         "PAGE_BASE_URL": "https://www.gsmarena.com/",
-        "RESET_LOGS": "false",
-        "PRIVATE_KEY": "5c803048150805735405a785" // strong key to create token
+        "RESET_LOGS": "true",
+        "PRIVATE_KEY": "5c803048150805735405a785", // strong key to create token
         // use admin to call delete request
-        // "MONGODB_AUTH": "mongodb+srv://developer:developerAtMongo@cluster0-l9wqt.mongodb.net/MobileArena?retryWrites=true",
-        // "REDIS_PORT" : "17285",
-        // "REDIS_HOST" : "redis-17285.c16.us-east-1-3.ec2.cloud.redislabs.com",
-        // "REDIS_PASSWORD" : "9818271889Abc!"
+        "MONGODB_AUTH": "mongodb+srv://developer:developerAtMongo@cluster0-l9wqt.mongodb.net/MobileArena?retryWrites=true",
+        "REDIS_PORT": "17285",
+        "REDIS_HOST": "redis-17285.c16.us-east-1-3.ec2.cloud.redislabs.com",
+        "REDIS_PASSWORD": "9818271889Abc!"
       },
       "console": "internalConsole",
       "internalConsoleOptions": "openOnSessionStart",
