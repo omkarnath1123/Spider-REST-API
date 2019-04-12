@@ -20,6 +20,8 @@ class crawlUncrawledDevices {
       // let proxies = await this.getProxyAndPort();
       // try to aggregate and update in db as processing
 
+      // FIXME token varification needed on sending api request
+
       let data = await this.unCrawledDevices();
       await this.callAxios(data);
       console.log(`UNCRAWLED DEVICES COUNT : ${data.length}`);

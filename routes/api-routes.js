@@ -93,6 +93,7 @@ router.post("/API/new_user", [printRequest, newUser]);
 
 async function userLoginAndTokenLogin(req, res, next) {
   try {
+    // FIXME login does not give token when expired token is present with username and password.
     const { user_name, email, user_level, password } = req.body;
     const { authorization } = req.headers;
     res.header("Content-Type", "application/json");
