@@ -1,0 +1,390 @@
+1xx Information Codes
+
+ 
+
+100 Continue Server Code
+100 Continue stands for “normal operation.” It means that the user made a good request, and the server started processing. This is a temporary response code that occurs only when the user waits for the final response from the server that occurs only after the last data packet is sent.
+When can this code be used? This is internal code, and sometimes it is not even generated if the user has already received some data from the server. This is something like a message to the server that the connection was established successfully and “the doors are open.” Send the data, but do not forget to close the door when you are done (I mean the final answer code).
+
+ 
+
+101 Switching Protocols
+This is probably one of the simplest server codes, which means that the user requested to switch the type of protocol used on the web server, and the server agreed to this.
+When can you apply this code? When switching to the new version of HTTP from the old type protocol. This request is executed only if there is a more suitable protocol (in other words if there is a more recent version of HTTP).
+
+ 
+
+102 Processing
+Since the WebDAV request (transfer protocol) can contain not only one query, but also many subqueries, including file operations, it can frequently require a longer time to complete the request.
+When can this code be used? This code is generated in order to notify the user of the need to reset the timer and wait for the next command in customary mode since the processing of the request can take a long time.
+
+ 
+
+2xx Success
+
+ 
+
+Messages of this class inform you of the cases of successful acceptance and processing of the client’s request. Depending on the status, the server can still send headers and the body of the message. In other words, this classification of codes means that the action requested by the client has been successfully accepted for processing.
+
+ 
+
+200 OK
+Status code 200 is probably the most popular but at the same time the most inconspicuous given its nature. It means that the exchange between the user and the server is completed, and everything went as it should.
+When can this code be used? Constantly!
+
+ 
+
+201 Created
+Because of the successful execution of the query, a new resource was created. For example, the user’s request led to the creation of a new resource, such as a new page. The source server has to create the resource before sending the code 201. If the resource cannot be created at this time, server should instead display the code 202 (accepted).
+
+ 
+
+202 Accepted
+The request was accepted for processing, but it was not completed for any reason. The request may not be completed, depending on whether it was rejected during processing.
+When can this code be applied? When server cannot execute the request at the time, it was made. The request is not initially intended for mandatory execution, and client does not need to wait for the final transmission of the message since a very long process can be started.
+
+ 
+
+203 Non-Authoritative Information
+The server successfully processed the request, but the information transmitted was not taken from the primary source (backup, another server, etc.) and therefore may be irrelevant. In fact, this code is very similar to 200 but indicates that the information was not obtained from the source.
+When can this code be applied? This code can be used instead of 200 when the sender has reason to believe that the response headers from an external source may be different from what the source server would provide.
+
+ 
+
+204 No Content
+This code is the response sent by server to indicate that request was received and understood, but there is no data that could be sent to the user. This is mainly used to allow running scripts without changing the document. This code should not contain the body of the message and is included in the first empty line of code immediately after the header.
+When can this code be applied? This code is mainly applied to allow you to enter or perform any action without having to update the document (page).
+
+ 
+
+205 Reset Content
+Server successfully processed the request but does not return any content. Unlike 204, this response demands the requested to update the document.
+When can this code be applied? Usually, it is used when a user fills in the form, and server sends browsers a request to clean the form. It is similar to code 204 but asks user to reset the document after completion – for example, clear the HTML form after confirmation.
+
+ 
+
+206 Partial Reset
+The server returns only a portion of the content corresponding to the header sent by the client. It is usually used by advanced caching tools when the user requests only a small portion of the content on the page, and server in its response provides data only for that area on the page.
+When can this code be applied? This code is usually used because of the If-Range query, which is used in powerful cache validators. The request should also include the area headers that are used as parameters for the range of return information.
+
+ 
+
+207 Multi-Status code
+The server passes results of several independent operations at once, which are placed in the body of the message as an XML document.
+
+ 
+
+3xx Redirection
+
+ 
+
+This class of status codes indicates further actions that have to be taken by the user agent in order to complete the request. Users can take actions, or they can include various requests to the server. To ease your life try redirect checker tool and get the information about what status code your URL has.
+
+ 
+
+300 Multiple Choices
+
+ 
+
+This code informs user that a resource has been moved and the server responds with a list of available alternatives, among which the user can select the most suitable resource.
+When can this code be applied? Typically, this code can be seen when the server considers that the URL provided by user (in other words, the user’s browser) has an inadequate index, and offers a further choice. Usually, this happens when user applies the URL to a directory of not a final level, and server offers them the choice of available files or directories of the subsequent level.
+
+ 
+
+301 Moved Permanently
+It is a common user request. It means that requests for this resource (as well as all subsequent requests) must be redirected to the specified URL.
+When can this code be applied? When a page no longer exists, or the link leading to a third-party source does not work anymore. 301 redirect tells the user that the requested resource has been moved (this is usually done using the .htaccess file available on Apache servers).
+
+ 
+
+302 Found status code
+This code tells user that location of the requested resource has been temporarily changed, and 302 status code has to contain information about the new location that the user should also request.
+When can this code be applied? It has several uses, many of which are not what the code was originally intended for. Initially, it was the main way to create a temporary redirect. Nevertheless, today there are other – ethical, and unethical – ways of using it.
+
+ 
+
+303 See Other
+It indicates that requested resource can be found by a URL that is different from the one specified in the request. This does not necessarily mean that something has been moved, this code only provides an address which is to be requested for a similar response.
+When can this code be applied? This method mainly exists to allow the output of the POST-activated script data to redirect user’s agent to the selected resource.
+
+ 
+
+304 Not Modified
+304 status code means that the user requests the document/resource only if it has been modified since the last cache update of this document.
+When can this code be applied? If response from server tells you that the parameters of the If-Modified-Since or If-Match document have not changed since the last cache was created, then there is no need to resend resource.
+
+ 
+
+305 Use Proxy
+It tells user that access to requested resource is possible only through the proxy specified in the response.
+When can this code be applied? It is frequently displayed in connection with security measures, and provides access to the requested URL resources.
+
+ 
+
+306 Switch Proxy
+It originally meant “subsequent requests have to use specified proxy,” but is not currently used and reserved.
+
+ 
+
+307 Temporary Redirect
+This code is returned if the resource is currently temporarily available for a different URL, which is also provided in the response. 307 is slightly different from the 302 – it is a more specific version of 302.
+When can this code be applied? It is used in almost the same cases like 302, but user has to continue to query the source URL on the following requests, or until new response code is applied.
+
+ 
+
+4хх Client error
+
+The 4xx code class is intended to indicate errors on the part of client, or to the fact that location has never (or already) existed. These status codes apply to any query method.
+
+ 
+
+400 Bad Request
+The request can not be executed due to a syntax error.
+When can this code be applied? When a user requests information, but does so, neglecting the rules of the hypertext transfer protocol. The query should not be repeated without changing the syntax.
+
+ 
+
+401 Unauthorized
+It is associated with a request to a resource that requires authorization. Answer 401 indicates that authorization attempt was rejected based on the data provided by the user. When can this code be applied? When a user requests the server using incorrect authorization data (username and/or password).
+
+ 
+
+402 Payment Required
+Reserved for the future. Nevertheless, the original purpose was that this code could be used in some form of electronic money for transactions, but this did not happen, and there was no application for the code.
+When can this code be applied? The old Apple MobileMe service reported a 402 error if user account in MobileMe was suspected of abuse of the service. Also, Youtube uses this state if a particular IP address is caught in an excessive number of requests, and then user needs to enter CAPTCHA.
+
+ 
+
+403 Forbidden
+The user tries to access a resource that he/she does not have access to, and authorization will not change the situation.
+When can this code be applied? When server understands the request, it refuses to execute it, because of the access restrictions for the client to specified resource. Usually, this happens when the resource is not intended for public access.
+
+ 
+
+404 Not Found
+Everyone is familiar with 404 Error code, are they not? It means that the requested resource can not be found, but in the future – when it may appear there – it can be accessed. Also, subsequent requests from the client are allowed here. However, in most of these cases, a redirection code from the 3xx family is used, and the user is redirected to an alternate resource or location.
+When can this code be used? Quite often, especially if the page has been moved or deleted. Often in such cases, the server automatically generates a guiding page with an error of 404.
+
+ 
+
+405 Method Not Allowed
+The method by which the request made to the resource is not available. In other words, an error occurs when you try to use GET on a form that requires data entry via POST, or by using the PUT method on a read-only resource.
+When can this code be applied? Errors 405 occur in connection with specific objects on the web page for which the request was made. For example, when query string in the script is different from the user’s request, which implies using this script.
+
+ 
+
+406 Not Acceptable
+The requested resource is able to generate only that content that cannot be applied to Accept-headers in the query itself. The browser can provide server with the characteristics of the data, which will be received from server
+When can this code be applied? In case when the file form of requested resource does not match the format that the user can recognize. We are now talking about a programming language, not French!
+
+ 
+
+407 Proxy Authentication Required
+Like status code 401, code 407 means that client must first be authorized through a proxy. To do this and authorize, the proxy should return a field with the Proxy-authenticate header, which meets requirements presented by server.
+When can this code be applied? When the server thinks that the request for data from the client is correct, but access to resource is possible only through authorization through a proxy server.
+
+ 
+
+408 Request Timeout
+The transmission timeout by the relay server from the client has expired.
+When can this code be applied? Guided by the specification of W3 HTTP: “The client did not make a request in the allotted time interval that the server was ready to wait. The customer MAY repeat request at any time. ”
+
+ 
+
+409 Conflict
+Indicates that the request can not be executed due to a conflicting request to the resource.
+When can this code be applied? You can get this code when uploading a file to a web server, where a more recent version of this file is located, which leads to a conflict in the version control system.
+
+ 
+
+410 Gone
+The server sends this response if a resource was previously located on the specified URL, but was deleted and is now unavailable. The user should not repeat the same request.
+When can this code be applied? In case when it is no longer possible to access the resource through this request, and server does not have information about the possible location of the resource. If the server has a suspicion that the document can be restored shortly, it is better for client to pass 404 code.
+
+ 
+
+411 Length Required
+The request does not indicate the length of the content, and it was requested in the perfect request.
+When can this code be used? When the browser does not determine the length of the requested content in request header. The server will not accept request without the valid content-length header field.
+
+ 
+
+412 Precondition Failed
+The server does not respond to one of the preconditions that sender specified in request. In other words, one or more of the request headers was returned with attribute false.
+When can this code be applied? In the case when request header that makes a valid request to the resource informs that this particular request is not applicable to this particular resource.
+
+ 
+
+413 Request Entity Too Large
+The code 413 is displayed in cases where server refuses to process request because the request body is too large.
+When can this code be applied? When used in the form of the POST method with content that is larger than server is capable of processing.
+
+ 
+
+414 Request-URL Too Long
+This code is displayed when server cannot process the request because the URL specified is too long.
+When can this code be applied? When the POST request is converted to a GET request. The POST request supports sending an unlimited amount of data, linking them to request itself. However, if the request is to be converted into a GET request, then request allows you to bind the form data to the URL, which enables you to hold information in larger sizes than it was available.
+
+ 
+
+415 Unsupported Media-Type
+A response 415 is sent to indicate that server noticed that part of the request was made in an unsupported format.
+When can this code be applied? When request does not specify any media types that are supported by the resource or server. For example, the user requests an image with a file extension that is not supported by server. The server knows what was requested but does not understand the format in which the resource was requested.
+
+ 
+
+416 Requested Range Not Satisfiable
+This response comes to the user when he/she requests a portion of a requested resource when this part cannot be provided.
+When can this code be applied? When a server requests XXX-YYY bytes of a resource, but the resource is smaller than specified in request.
+
+ 
+
+417 Expectation Failed
+This response can be obtained when for some reason the server cannot satisfy the value of Expect field of the request header.
+When can this code be applied? When one of the request headers, the “Expect” header, has a request to which the server cannot respond.
+
+ 
+
+418 I’m a teapot
+This code was created in 1998 as one of the traditional April Fools’ jokes IETF, in RFC 2324, the Hyper Text Coffee Pot Control Protocol, and is unlikely to be handled by modern HTTP servers.
+When can this code be applied? It was – 15 years ago, for the sake of laughter.
+
+ 
+
+422 Unprocessable Entity
+The request was accepted and understood, but cannot be performed due to the presence of semantic errors.
+When can this code be applied? When server has successfully accepted the request, it can work with the specified data type; in the query body, the XML document has the correct syntax, but there is some kind of logical error, due to which it is impossible to operate the resource.
+
+ 
+
+423 Locked
+The target resource from request is blocked from applying the specified method to it. To make resource available, you need to unlock it or provide the correct authorization data.
+When can this code be applied? When the resource … is locked. Usually, this happens for security reasons.
+
+ 
+
+424 Failed Dependency
+Indicates that implementation of the current request may depend on the success of the other operation, and if it is not successfully completed, the entire request processing will be interrupted.
+
+ 
+
+425 Unordered Collection
+This code is displayed when the resource is defined in the drafts of the WebDAV Advanced Collections Protocol but is not present in the Web Distributed Authoring and Versioning Ordered Collections Protocol.
+
+ 
+
+426 Upgrade Required
+This code is displayed when the server instructs the client to update (switch to a different, newer) protocol. When can this code be applied? Usually when the browser uses obsolete protocols.
+
+ 
+
+428 Precondition Required
+The source server requires specifying preconditions in the query. This code is designed to avoid conflicting versions of resource in cases when the client receives (GET) state of the resource, modifies it, and sends (PUT) back to the server, and at the same time some third party also changes the location of the resource, which leads to a conflict.
+When can this code be applied? By requesting an indication of conditions, the server, as it were, guarantees clients that they are using a correct current copy of the resource. If this does not match, the user will receive an error of 428.
+
+ 
+
+429 Too Many Requests
+This response is sent if a client tried to send too many requests in a short time.
+When can this code be applied? When a user sends too many requests in a short period of time.
+
+ 
+
+431 Request Header Fields Too Large
+Occurs when the server is not going to process a request because any of the header fields (or all the header fields) are too large.
+When can this code be applied? Basically, when the request header from the user is larger than the server is capable of processing. The request can be repeated after the size of header fields in the request will be reduced.
+
+ 
+
+444 No Response
+Used in Nginx log files to indicate that server did not return information to user and closed the connection.
+When can this code be applied? It was usually used as a deterrent against malicious software.
+
+ 
+
+449 Retry With (Microsoft)
+The Microsoft extension, which indicates that request should be repeated after implementing the appropriate action.
+When can this code be applied? This code is often generated when the configured query parameters do not match what server can accept.
+
+ 
+
+450 Blocked by Windows Parental Controls (Microsoft)
+Microsoft Extension. This error occurs when the Windows Parental Controls parameters are set to block access to certain web pages.
+When can this code be applied? When parents (knowing about this function) use parental control, and id-access has requested access to the blocked resource.
+
+ 
+
+451 Unavailable For Legal Reasons
+New HTTP status codes for resources that are blocked for legal considerations. Used to indicate that access to the requested resource was blocked for legal reasons: for example, by censorship, or by the government.
+
+ 
+
+5xx Server Error
+
+5xx codes are allocated for cases of unsuccessful operation through the fault of the server.
+These server responses are often displayed when the user requests that server is unable to process for one reason or another. The server should include a message for a browser that should be shown to the user – it tells you that the server (and for whatever reasons) is unable to process the request.
+
+ 
+
+500 Internal Server Error
+This error indicates an internal server error that does not fall within the other class errors.
+When can this code be applied? When a resource or link is created on a server (like a calendar in a reservation system) that do not technically exist as a link or an available resource but is shown to user as a link.
+
+ 
+
+501 Not Implemented
+The server either does not understand the request method or does not support the capabilities required to process the request.
+When can this code be applied? You can face 501, when the server does not support normal request protocols, like GET, OPTIONS, HEAD, POST, etc.
+
+ 
+
+502 Bad Gateway
+Reply 502 is displayed when server, acting as a gateway or proxy, received an invalid reply message from the upstream server.
+When can this code be applied? Usually, when the upstream server and the proxy/gateway do not agree on the protocols presented in request, and as a result, an error occurs in the data exchange.
+
+ 
+
+503 Server Unavailable
+The server is temporarily unable to process requests for technical reasons. Basically, this condition is temporary.
+When can this code be used? When a site is in excessive demand, and the server is unable to process all requests.
+
+ 
+
+504 Gateway Timeout
+The server as a gateway or proxy server did not wait for a response from the upstream server to complete current request.
+When can this code be applied? When a proxy/gateway is used to transfer data, and two servers are waiting for replies.
+
+ 
+
+505 HTTP Version Not Supported
+The server does not support the HTTP protocol version specified in request.
+When can this code be applied? In the cases described above! When the HTTP protocol is older than the server requires, and hence is not supported.
+
+ 
+
+506 Variant Also Negotiates
+Such a response is sent when, as a result of an erroneous configuration, the selected option indicates itself, which causes the binding process to be interrupted.
+When can this code be applied? When the server is configured incorrectly and is unable to process the request.
+
+ 
+
+507 Insufficient Storage
+507 happens when the server is unable to place the data because there is not enough room for the current request.
+When can this code be applied? When the server is already fully loaded, and the user requests a resource that the server already has in stock. The problem is that there is no place on the server to store the sent in request data to send the requested resource.
+
+ 
+
+509 Bandwidth Limit Exceeded
+This response code is used when the website limits the traffic restriction assigned to it.
+When can this code be applied? When Apache runs correct extension, and the ISP has a throughput level that can be exceeded soon. There are several limit options.
+
+ 
+
+510 Not Extended
+510 takes place when there is no extension on the server that the client wants to use. When can this code be applied? When the server requires more information in the request.
+
+ 
+
+511 Network Authentication Required
+This status code is displayed if the client should first be authorized on the network, for example, enter a password for the paid Internet access point.
+When can this code be applied? When a user first has to give his consent to the terms of use, before he/she gets access to the Internet (for example, to the Wi-fi access point)

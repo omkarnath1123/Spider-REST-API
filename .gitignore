@@ -192,4 +192,4 @@ tmp/
 package-lock.json
 
 ## ignore all .txt files
-*.txt
+## *.txt
