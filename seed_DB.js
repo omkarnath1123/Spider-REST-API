@@ -14,6 +14,7 @@ async function doAxios(url) {
         // console.log(error);
       });
   } catch (error) {
+    console.log("34");
     console.error(error);
   }
 }
