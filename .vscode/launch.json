@@ -29,6 +29,10 @@
         "PORT": "5000",
         "PAGE_BASE_URL": "https://www.gsmarena.com/",
         "RESET_LOGS": "false",
+        "MAX_LOG_FILE_SIZE" : "10",
+        "JSON_MEMORY_LIMIT" : "10mb",
+        "REDIS_CACHE_UNTIL" : "3600",
+        "CHROMIUM_HEADLESS" : true,
         "PRIVATE_KEY": "5c803048150805735405a785", // strong key to create token
         // use admin to call delete request
         "MONGODB_AUTH": "mongodb+srv://developer:developerAtMongo@cluster0-l9wqt.mongodb.net/MobileArena?retryWrites=true",

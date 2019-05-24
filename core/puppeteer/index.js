@@ -10,7 +10,7 @@ module.exports = class Puppeteer {
         // STUB userDataDir: PUPPETEER_DIR,
         // STUB slowMo: 100,
         ignoreHTTPSErrors: true,
-        headless: env === "production" || env === "staging",
+        headless: env === "production" || (process.env.CHROMIUM_HEADLESS || true),
         devtools:
           env !== "production" && env !== "staging" && env !== "development",
         args: [
