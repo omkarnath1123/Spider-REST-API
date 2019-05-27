@@ -5,7 +5,7 @@ const UsersSchema = new Schema({
   user_name: { type: String, index: true, lowercase: true, unique: true },
   email: { type: String },
   hash: { type: String },
-  key: {type: String},
+  key: { type: String },
   user_level: { type: String, default: "FREE_USER" }
 });
 

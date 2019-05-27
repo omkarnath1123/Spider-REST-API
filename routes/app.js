@@ -29,7 +29,10 @@ app.use(
 // Allow cross origin access
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept, Authorization");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept, Authorization"
+  );
   if (req.method === "OPTIONS") {
     req.header("Access-Control-Allow-Methods", "GET, PUT, POST, PATCH, DELETE");
     return res.status(200).json({});
@@ -87,7 +90,10 @@ app.listen(port, function() {
     if (!fs.existsSync(`${LOG_PATH}/error.log`)) {
       fs.writeFileSync(`${LOG_PATH}/error.log`);
     }
-    fs.appendFileSync(`${LOG_PATH}/error.log`, new Date() + " : " + errMessage + "\n");
+    fs.appendFileSync(
+      `${LOG_PATH}/error.log`,
+      new Date() + " : " + errMessage + "\n"
+    );
     _error.apply(console, arguments);
   };
 
@@ -106,7 +112,10 @@ app.listen(port, function() {
       });
     }
 
-    fs.appendFileSync(`${LOG_PATH}/log.log`, new Date() + " : " + logMessage + "\n");
+    fs.appendFileSync(
+      `${LOG_PATH}/log.log`,
+      new Date() + " : " + logMessage + "\n"
+    );
     _log.apply(console, arguments);
   };
 
@@ -115,7 +124,10 @@ app.listen(port, function() {
     if (!fs.existsSync(`${LOG_PATH}/warning.log`)) {
       fs.writeFileSync(`${LOG_PATH}/warning.log`);
     }
-    fs.appendFileSync(`${LOG_PATH}/warning.log`, new Date() + " : " + warnMessage + "\n");
+    fs.appendFileSync(
+      `${LOG_PATH}/warning.log`,
+      new Date() + " : " + warnMessage + "\n"
+    );
     _warning.apply(console, arguments);
   };
 })();
@@ -131,14 +143,24 @@ function logResponseBody(req, res, next) {
     oldWrite.apply(res, arguments);
   };
 
-  if (`${req.protocol}://${req.get("host")}${req.originalUrl}`.match(/favicon/i)) {
-    console.log(`${req.protocol}://${req.get("host")}${req.originalUrl}  | Response Body : Rest API favicon.`);
+  if (
+    `${req.protocol}://${req.get("host")}${req.originalUrl}`.match(/favicon/i)
+  ) {
+    console.log(
+      `${req.protocol}://${req.get("host")}${
+        req.originalUrl
+      }  | Response Body : Rest API favicon.`
+    );
     return next();
   }
   res.end = function(chunk) {
     if (chunk) chunks.push(chunk);
     const body = Buffer.concat(chunks).toString("utf8");
-    console.log(`${req.protocol}://${req.get("host")}${req.originalUrl}  | Response Body : ${body}`);
+    console.log(
+      `${req.protocol}://${req.get("host")}${
+        req.originalUrl
+      }  | Response Body : ${body}`
+    );
     oldEnd.apply(res, arguments);
   };
   next();
@@ -154,5 +176,9 @@ app.listen(function() {
   console.log(`Is logs are reset | ${process.env.RESET_LOGS}`);
   console.log(`Maximum log file size | ${MAX_LOG_FILE_SIZE}`);
   console.log(`Response json maximum memory limit | ${JSON_MEMORY_LIMIT}`);
-  console.log(`Is chromium is in headless mode | ${process.env.NODE_ENV === "production" || (process.env.CHROMIUM_HEADLESS || true)}`);
+  console.log(
+    `Is chromium is in headless mode | ${process.env.NODE_ENV ===
+      "production" ||
+      (process.env.CHROMIUM_HEADLESS || true)}`
+  );
 });

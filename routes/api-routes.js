@@ -16,7 +16,9 @@ const REDIS_CACHE_UNTIL = Number(process.env.REDIS_CACHE_UNTIL || 3600 * 1);
 
 // get current hour
 let getCurretHours = () => {
-  return Number((new Date().getTime() / (1000 * 60 * 60)).toString().split(".")[0]);
+  return Number(
+    (new Date().getTime() / (1000 * 60 * 60)).toString().split(".")[0]
+  );
 };
 
 // catch statement for server error
@@ -59,7 +61,9 @@ async function newUser(req, res, next) {
       return;
     }
     let key = crypto.randomBytes(16).toString("hex");
-    let hash = crypto.pbkdf2Sync(password, key, 10000, 32, "sha512").toString("hex");
+    let hash = crypto
+      .pbkdf2Sync(password, key, 10000, 32, "sha512")
+      .toString("hex");
     let new_user = await new Users({
       user_name: user_name,
       key: key,
@@ -146,7 +150,9 @@ async function userLoginAndTokenLogin(req, res, next) {
     }
     let isCustomer = await Users.findOne({ user_name: user_name });
     if (isCustomer) {
-      let pass = crypto.pbkdf2Sync(password, isCustomer.key, 10000, 32, "sha512").toString("hex");
+      let pass = crypto
+        .pbkdf2Sync(password, isCustomer.key, 10000, 32, "sha512")
+        .toString("hex");
       if (pass !== isCustomer.hash) {
         let results = {
           errors: {
@@ -213,7 +219,8 @@ async function validateToken(req, res, next) {
       let results = {
         errors: {
           auth: false,
-          message: "AUTH TOKEN is mendatory for api request. Please login again."
+          message:
+            "AUTH TOKEN is mendatory for api request. Please login again."
         }
       };
       await res.status(401).send(JSON.stringify(results, null, 4));
@@ -270,16 +277,20 @@ async function showRequestParams(req, res, next) {
   console.log("Request Body :" + JSON.stringify(req.body));
   req.body.method = req.params.method;
   req.body.company = req.params.company;
-  req.body.model = req.params.model;
-  req.body.company = req.body.company ? req.body.company.replace(/%20/g, " ") : req.body.company;
-  req.body.model = req.body.model ? req.body.model.replace(/%20/g, " ") : req.body.model;
+  req.body.model = req.params.model || req.params["0"];
+  req.body.company = req.body.company
+    ? req.body.company.replace(/%20/g, " ")
+    : req.body.company;
+  req.body.model = req.body.model
+    ? req.body.model.replace(/%20/g, " ")
+    : req.body.model;
   if (
     (req.params.method === "Brand" && !req.params.company) ||
     (req.params.method === "Device" && !req.params.company) ||
-    (req.params.method === "Device" && !req.params.model) ||
+    (req.params.method === "Device" && !req.body.model) ||
     (req.params.method === "Brands" && req.params.company) ||
     (req.params.method === "Devices" && !req.params.company) ||
-    (req.params.method === "Devices" && req.params.model)
+    (req.params.method === "Devices" && req.body.model)
   ) {
     res.header("Content-Type", "application/json");
     let results = {
@@ -338,7 +349,9 @@ async function readBrands(req, res, next) {
       return next();
     }
 
-    let response = await Master_Operator[mongo_methods[req.params.method]](req.body);
+    let response = await Master_Operator[mongo_methods[req.params.method]](
+      req.body
+    );
     res.header("Content-Type", "application/json");
     let results = { success: true, response: response };
     await res.send(JSON.stringify(results, null, 4));
@@ -352,13 +365,23 @@ async function readBrands(req, res, next) {
             console.log(`Adding ${hash_string} to Redis`);
             // REVIEW add callback as fourth parameter
             // NOTE cache value till 1hour and don't cache value for empty response
-            client.set(hash_string, JSON.stringify(response), "EX", REDIS_CACHE_UNTIL);
+            client.set(
+              hash_string,
+              JSON.stringify(response),
+              "EX",
+              REDIS_CACHE_UNTIL
+            );
             resolve(true);
           } else {
             console.log(`${hash_string} is already in Redis : ${result}`);
             console.log("UPDATING the current Redis value");
             // NOTE cache value till 1hour and don't cache value for empty response
-            client.set(hash_string, JSON.stringify(response), "EX", REDIS_CACHE_UNTIL);
+            client.set(
+              hash_string,
+              JSON.stringify(response),
+              "EX",
+              REDIS_CACHE_UNTIL
+            );
             resolve(true);
           }
         });
@@ -388,7 +411,9 @@ async function crawlBrands(req, res, next) {
     return;
   }
   try {
-    let response = await Master_Operator[crawler_methods[req.params.method]](req.body);
+    let response = await Master_Operator[crawler_methods[req.params.method]](
+      req.body
+    );
   } catch (error) {
     await catchServerError(req, res, next, error);
     return;
@@ -402,11 +427,26 @@ router.get("/favicon.ico/", function(req, res, next) {
 });
 
 // READ DATA METHODS
-router.get(["/:method/", "/:method/:company/", "/:method/:model/", "/:method/:company/:model/"], [validateToken, showRequestParams, readBrands]);
+router.get(
+  [
+    "/:method/",
+    "/:method/:company/",
+    "/:method/:model/",
+    "/:method/:company/:model",
+    "/:method/:company/*"
+  ],
+  [validateToken, showRequestParams, readBrands]
+);
 
 // READ & UPDATE DATA METHODS
 router.post(
-  ["/:method/", "/:method/:company/", "/:method/:model/", "/:method/:company/:model/"],
+  [
+    "/:method/",
+    "/:method/:company/",
+    "/:method/:model/",
+    "/:method/:company/:model",
+    "/:method/:company/*"
+  ],
   [validateToken, showRequestParams, readBrands, crawlBrands]
 );
 
@@ -436,7 +476,9 @@ async function readDailyIntrest(req, res, next) {
 // update daily intrest
 async function getDailyIntrest(req, res, next) {
   try {
-    let response = await Master_Operator[crawler_methods.DailyIntrest](req.body);
+    let response = await Master_Operator[crawler_methods.DailyIntrest](
+      req.body
+    );
   } catch (error) {
     await catchServerError(req, res, next, error);
     return;
@@ -445,7 +487,12 @@ async function getDailyIntrest(req, res, next) {
 }
 
 // READ & UPDATE DAILY INTEREST
-router.patch("/Device/DAILY%20INTEREST", [validateToken, printRequest, readDailyIntrest, getDailyIntrest]);
+router.patch("/Device/DAILY%20INTEREST", [
+  validateToken,
+  printRequest,
+  readDailyIntrest,
+  getDailyIntrest
+]);
 
 // update new devices
 async function updateNewDevices(req, res, next) {
@@ -468,7 +515,11 @@ async function updateNewDevices(req, res, next) {
 router.put("/UPDATE/", [validateToken, printRequest, updateNewDevices]);
 
 // delete brands/devices from data
-router.delete("/REMOVE/:company/:device/", [validateToken, printRequest, removeDevice]);
+router.delete("/REMOVE/:company/:device", [
+  validateToken,
+  printRequest,
+  removeDevice
+]);
 
 // delete brands/devices from Mongo
 async function removeDevice(req, res, next) {
@@ -509,7 +560,11 @@ async function removeDevice(req, res, next) {
 }
 
 // insert specs of those devices whose link and name is present but secs is not present
-router.put("/INCOMPLETE_DATA/", [validateToken, printRequest, updateIncompleteDevices]);
+router.put("/INCOMPLETE_DATA", [
+  validateToken,
+  printRequest,
+  updateIncompleteDevices
+]);
 
 // update incomplete data in Mongo
 async function updateIncompleteDevices(req, res, next) {
